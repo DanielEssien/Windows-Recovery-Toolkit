@@ -1,41 +1,62 @@
 ###############################################################
-# Application Engine
+#
+# Windows Recovery Toolkit Enterprise (WRTE)
+#
+# Layer      : Core
+# File       : Application.ps1
+# Purpose    : Controls the WRTE application lifecycle.
+#
 ###############################################################
 
 function Start-Application {
 
-    while ($true) {
+    [CmdletBinding()]
+    param()
+
+    Write-Log "Application started."
+
+    $ExitApplication = $false
+
+    do {
 
         Show-Dashboard
 
-        $Selection = Read-Host "Select an option"
+        $Selection = (Read-Host "Select an option").Trim().ToUpper()
 
-        switch ($Selection.ToUpper()) {
+        switch ($Selection) {
 
             "1" {
 
-                Invoke-QuickHealthCheck
+                Write-WRTEWarning "Diagnostics module not implemented yet."
+                Wait-WRTE
+
+            }
+
+            "2" {
+
+                Write-WRTEWarning "Windows Repair module not implemented yet."
+                Wait-WRTE
 
             }
 
             "Q" {
 
-                Write-Log "Application Closed"
+                Write-Log "Application closed."
 
-                break
+                $ExitApplication = $true
 
             }
 
             default {
 
-                Write-WarningMessage "Invalid menu selection."
+                Write-WRTEWarning "Invalid selection."
 
-                Wait-Toolkit
+                Wait-WRTE
 
             }
 
         }
 
-    }
+    } while (-not $ExitApplication)
 
 }

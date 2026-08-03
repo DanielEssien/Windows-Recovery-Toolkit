@@ -1,6 +1,16 @@
 ###############################################################
-# Windows Recovery Toolkit Enterprise
-# System Information Service
+#
+# Windows Recovery Toolkit Enterprise (WRTE)
+#
+# Layer      : Core
+# File       : System.ps1
+# Purpose    : Retrieves Windows system information and
+#              exposes it through reusable services.
+#
+# Author     : Daniel Ita Essien
+# Copyright  : (c) 2026 Daniel Ita Essien
+# License    : MIT
+#
 ###############################################################
 
 function Get-SystemInformation {

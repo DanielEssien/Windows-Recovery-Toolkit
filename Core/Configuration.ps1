@@ -1,5 +1,16 @@
 ###############################################################
-# Configuration Manager
+#
+# Windows Recovery Toolkit Enterprise (WRTE)
+#
+# Layer      : Core
+# File       : Configuration.ps1
+# Purpose    : Loads and provides access to application
+#              configuration settings.
+#
+# Author     : Daniel Ita Essien
+# Copyright  : (c) 2026 Daniel Ita Essien
+# License    : MIT
+#
 ###############################################################
 
 $script:Configuration = $null

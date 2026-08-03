@@ -1,5 +1,16 @@
 ###############################################################
-# Logging Service
+#
+# Windows Recovery Toolkit Enterprise (WRTE)
+#
+# Layer      : Core
+# File       : Logger.ps1
+# Purpose    : Provides centralized application logging
+#              services.
+#
+# Author     : Daniel Ita Essien
+# Copyright  : (c) 2026 Daniel Ita Essien
+# License    : MIT
+#
 ###############################################################
 
 function Initialize-Logger {
