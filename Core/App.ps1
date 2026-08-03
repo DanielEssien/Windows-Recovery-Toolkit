@@ -30,7 +30,7 @@ function Start-Application {
 
                 Write-WarningMessage "Invalid menu selection."
 
-                Pause-Toolkit
+                Wait-Toolkit
 
             }
 

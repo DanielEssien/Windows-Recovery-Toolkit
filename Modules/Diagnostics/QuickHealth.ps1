@@ -8,6 +8,6 @@ function Invoke-QuickHealthCheck {
 
     Write-Info "Collecting information..."
 
-    Pause-Toolkit
+    Wait-Toolkit
 
 }

@@ -18,6 +18,7 @@ function Write-Info {
     ...
 }
 
-function Pause-Toolkit {
-    ...
+function Wait-Toolkit {
+    Write-Host
+    Read-Host "Press Enter to continue"
 }
