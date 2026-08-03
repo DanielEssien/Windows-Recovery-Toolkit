@@ -1,32 +1,46 @@
 ###############################################################
-# WRTE System Information Service
+# Windows Recovery Toolkit Enterprise
+# System Information Service
 ###############################################################
 
 function Get-SystemInformation {
 
-    $os = Get-CimInstance Win32_OperatingSystem
+    [CmdletBinding()]
+    param()
 
-    $computer = Get-CimInstance Win32_ComputerSystem
+    try {
 
-    [PSCustomObject]@{
+        $OperatingSystem = Get-CimInstance -ClassName Win32_OperatingSystem
+        $ComputerSystem  = Get-CimInstance -ClassName Win32_ComputerSystem
+        $BIOS            = Get-CimInstance -ClassName Win32_BIOS
 
-        ComputerName = $env:COMPUTERNAME
+        return [PSCustomObject]@{
 
-        CurrentUser  = $env:USERNAME
+            ComputerName = $env:COMPUTERNAME
+            CurrentUser  = $env:USERNAME
 
-        Windows      = $os.Caption
+            Manufacturer = $ComputerSystem.Manufacturer
+            Model        = $ComputerSystem.Model
 
-        Version      = $os.Version
+            WindowsName    = $OperatingSystem.Caption
+            WindowsVersion = $OperatingSystem.Version
+            BuildNumber    = $OperatingSystem.BuildNumber
 
-        Build        = $os.BuildNumber
+            BIOSVersion = ($BIOS.SMBIOSBIOSVersion -join ", ")
 
-        Manufacturer = $computer.Manufacturer
+            MemoryGB = [Math]::Round(
+                $ComputerSystem.TotalPhysicalMemory / 1GB,
+                2
+            )
 
-        Model        = $computer.Model
+            PowerShellVersion = $PSVersionTable.PSVersion.ToString()
 
-        TotalMemoryGB = [math]::Round($computer.TotalPhysicalMemory / 1GB,2)
+        }
 
-        PowerShell   = $PSVersionTable.PSVersion.ToString()
+    }
+    catch {
+
+        throw "Unable to retrieve system information. $($_.Exception.Message)"
 
     }
 
