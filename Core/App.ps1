@@ -1,23 +1,41 @@
 ###############################################################
-# Application Controller
+# Application Engine
 ###############################################################
 
 function Start-Application {
 
-    Clear-Host
+    while ($true) {
 
-    Write-Host ""
-    Write-Host "===============================================" -ForegroundColor Cyan
-    Write-Host " Windows Recovery Toolkit Enterprise" -ForegroundColor Green
-    Write-Host "===============================================" -ForegroundColor Cyan
+        Show-Dashboard
 
-    Write-Host ""
+        $Selection = Read-Host "Select an option"
 
-    Write-Host "Version :" $Global:WRTE_Config.Application.Version
-    Write-Host "Author  :" $Global:WRTE_Config.Application.Author
+        switch ($Selection.ToUpper()) {
 
-    Write-Host ""
+            "1" {
 
-    Write-Host "Core Engine Started Successfully." -ForegroundColor Green
+                Invoke-QuickHealthCheck
+
+            }
+
+            "Q" {
+
+                Write-Log "Application Closed"
+
+                break
+
+            }
+
+            default {
+
+                Write-WarningMessage "Invalid menu selection."
+
+                Pause-Toolkit
+
+            }
+
+        }
+
+    }
 
 }

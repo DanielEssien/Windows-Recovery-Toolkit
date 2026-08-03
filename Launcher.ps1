@@ -2,12 +2,6 @@
 # Windows Recovery Toolkit Enterprise
 ###############################################################
 
-Clear-Host
+. "$PSScriptRoot\Core\Bootstrap.ps1"
 
-. ".\Core\Loader.ps1"
-
-Initialize-Configuration
-
-Write-Log "Application Started"
-
-Start-Application
+Start-Bootstrap
