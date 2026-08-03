@@ -2,18 +2,24 @@
 # Configuration Manager
 ###############################################################
 
-$Global:WRTE_Config = $null
+$script:Configuration = $null
 
 function Initialize-Configuration {
 
     $configPath = Join-Path $PSScriptRoot "..\Config\Settings.json"
 
-    if (!(Test-Path $configPath)) {
-
-        throw "Configuration file not found."
-
+    if (-not (Test-Path $configPath)) {
+        throw "Configuration file not found: $configPath"
     }
 
-    $Global:WRTE_Config = Get-Content $configPath -Raw | ConvertFrom-Json
+    $script:Configuration = Get-Content $configPath -Raw | ConvertFrom-Json
+}
 
+function Get-Configuration {
+
+    if ($null -eq $script:Configuration) {
+        throw "Configuration has not been initialized."
+    }
+
+    return $script:Configuration
 }
