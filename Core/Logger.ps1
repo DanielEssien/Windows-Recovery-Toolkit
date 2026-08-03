@@ -1,35 +1,42 @@
 ###############################################################
-# Logging Engine
+# Logging Service
 ###############################################################
+
+function Initialize-Logger {
+
+    $config = Get-Configuration
+
+    $logFolder = Join-Path $PSScriptRoot "..\$($config.Paths.Logs)"
+
+    if (-not (Test-Path $logFolder)) {
+
+        New-Item -Path $logFolder -ItemType Directory | Out-Null
+
+    }
+
+    $script:LogFile = Join-Path $logFolder $config.Logging.FileName
+
+}
 
 function Write-Log {
 
     param(
 
+        [Parameter(Mandatory)]
         [string]$Message,
 
+        [ValidateSet("INFO","WARNING","ERROR")]
         [string]$Level = "INFO"
 
     )
 
-    if (-not $Global:WRTE_Config.Logging.Enabled) {
-
-        return
-
+    if (-not $script:LogFile) {
+        throw "Logger has not been initialized."
     }
 
-    $folder = Join-Path $PSScriptRoot "..\$($Global:WRTE_Config.Logging.Folder)"
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
-    if (!(Test-Path $folder)) {
-
-        New-Item $folder -ItemType Directory | Out-Null
-
-    }
-
-    $file = Join-Path $folder $Global:WRTE_Config.Logging.FileName
-
-    $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-
-    Add-Content $file "[$time] [$Level] $Message"
+    Add-Content -Path $script:LogFile `
+        -Value "$timestamp [$Level] $Message"
 
 }
