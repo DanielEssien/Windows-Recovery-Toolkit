@@ -1,0 +1,33 @@
+# Logs
+Logs/
+*.log
+
+# Reports
+Reports/
+*.html
+*.csv
+*.zip
+
+# PowerShell
+*.psd1
+*.ps1xml
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Temporary
+*.tmp
+*.bak
+
+# PowerShell History
+ConsoleHost_history.txt
+
+# OS Files
+.DS_Store
