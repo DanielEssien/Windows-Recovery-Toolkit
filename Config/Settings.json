@@ -1,0 +1,26 @@
+{
+    "Application": {
+        "Name": "Windows Recovery Toolkit Enterprise",
+        "Version": "4.0.0",
+        "Edition": "Enterprise",
+        "Author": "Daniel Ita Essien",
+        "Company": "Center for Integrated Health Programs (CIHP)"
+    },
+
+    "Theme": {
+        "PrimaryColor": "Cyan",
+        "SecondaryColor": "Green",
+        "WarningColor": "Yellow",
+        "ErrorColor": "Red"
+    },
+
+    "Logging": {
+        "Enabled": true,
+        "Folder": "Logs",
+        "FileName": "Toolkit.log"
+    },
+
+    "Reports": {
+        "Folder": "Reports"
+    }
+}
