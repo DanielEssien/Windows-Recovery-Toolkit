@@ -9,25 +9,15 @@ function Start-Bootstrap {
 
     Clear-Host
 
-    Write-Host "Starting WRTE..." -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "Starting Windows Recovery Toolkit Enterprise..." -ForegroundColor Cyan
     Write-Host ""
 
     Initialize-Configuration
-
     Initialize-Logger
 
-    Write-Log "Bootstrap started"
+    Write-Log "Bootstrap completed."
 
-    $config = Get-Configuration
-
-    Write-Host "Application : $($config.Application.Name)"
-    Write-Host "Version     : $($config.Application.Version)"
-
-    Write-Log "Configuration loaded"
-
-    Write-Host ""
-    Write-Host "Bootstrap completed." -ForegroundColor Green
-
-    Write-Log "Bootstrap completed"
+    Start-Application
 
 }
