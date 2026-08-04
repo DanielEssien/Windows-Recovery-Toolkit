@@ -25,18 +25,17 @@ function Clear-WRTE {
 function Show-Banner {
 
     [CmdletBinding()]
-    param(
+    param()
 
-        [string]$Title = "Windows Recovery Toolkit Enterprise"
-
-    )
+    $Config = Get-Configuration
 
     Clear-WRTE
 
     Write-Host ""
-    Write-Host "============================================================" -ForegroundColor Cyan
-    Write-Host " $Title" -ForegroundColor Green
-    Write-Host "============================================================" -ForegroundColor Cyan
+    Write-Host ("=" * 60) -ForegroundColor Cyan
+    Write-Host (" {0}" -f $Config.Application.Name) -ForegroundColor Green
+    Write-Host (" {0}" -f $Config.Application.Motto) -ForegroundColor DarkCyan
+    Write-Host ("=" * 60) -ForegroundColor Cyan
     Write-Host ""
 
 }
@@ -202,8 +201,13 @@ function Show-Footer {
     [CmdletBinding()]
     param()
 
+    $Config = Get-Configuration
+
     Write-Host ""
     Write-Host ("=" * 60) -ForegroundColor DarkGray
+    Write-Host ("Version {0} | © 2026 {1}" -f `
+        $Config.Application.Version,
+        $Config.Application.Author) -ForegroundColor DarkGray
 
 }
 

@@ -24,11 +24,13 @@ function Start-QuickHealth {
     [CmdletBinding()]
     param()
 
+    $StartTime = Get-Date
+
     Show-Banner
 
-    Show-Section "Quick Health Check"
-
     Write-Info "Collecting system information..."
+
+    Start-Sleep -Milliseconds 500   
 
     Write-BlankLine
 
@@ -38,16 +40,39 @@ function Start-QuickHealth {
     $FreeDisk = Get-SystemDriveFreeSpace
     $Defender = Get-DefenderStatus
 
-    $Health = "Healthy"
+    $Issues = 0
 
-    if (-not $Internet -or
-        -not $IsAdmin -or
-        $Defender -ne "Running" -or
-        $FreeDisk -lt 20) {
+    if (-not $IsAdmin) { $Issues++ }
 
-        $Health = "Attention"
+    if (-not $Internet) { $Issues++ }
+
+    if ($Defender -ne "Running") { $Issues++ }
+
+    if ($FreeDisk -lt 20) { $Issues++ }
+
+    switch ($Issues) {
+
+        0 {
+
+            $Health = "Healthy"
+
+        }
+
+        1 {
+
+            $Health = "Warning"
+
+        }
+
+        default {
+
+            $Health = "Attention"
+
+        }
 
     }
+
+    Show-Section "System Information"
 
     Write-Property "Computer Name" $System.ComputerName
     Write-Property "Current User"  $System.CurrentUser
@@ -55,6 +80,8 @@ function Start-QuickHealth {
     Write-Property "Version"       $System.Version
     Write-Property "Build"         $System.Build
     Write-Property "PowerShell"    $System.PowerShell
+
+    Show-Section "Health Checks"
 
     Write-Property "Administrator" `
         $(if($IsAdmin){"Yes"}else{"No"})
@@ -67,11 +94,82 @@ function Start-QuickHealth {
     
     Write-BlankLine
 
-    Write-Property "Overall Health" $Health
+    Show-Section "Overall Assessment"
+
+    switch ($Health) {
+
+        "Healthy" {
+
+            Write-Success "Overall Health : HEALTHY"
+
+        }
+
+        "Warning" {
+
+            Write-WRTEWarning "Overall Health : WARNING"
+
+        }
+
+        default {
+
+            Write-WRTEError "Overall Health : ATTENTION"
+
+        }
+
+    }
+
+    Show-Section "Recommendations"
+
+    if (-not $IsAdmin) {
+
+        Write-WRTEWarning "• Run WRTE as Administrator."
+
+    }
+
+    if (-not $Internet) {
+
+        Write-WRTEWarning "• Connect to the Internet."
+
+    }
+
+    if ($Defender -ne "Running") {
+
+        Write-WRTEWarning "• Start Microsoft Defender."
+
+    }
+
+    if ($FreeDisk -lt 20) {
+
+        Write-WRTEWarning "• Free at least 20 GB of disk space."
+
+    }
+
+    if ($IsAdmin -and
+        $Internet -and
+        $Defender -eq "Running" -and
+        $FreeDisk -ge 20) {
+
+        Write-Success "• No action required."
+
+    }
+
+    $Elapsed = (Get-Date) - $StartTime
+
+    Write-BlankLine
+
+    Write-Property "Execution Time" ("{0:N2} sec" -f $Elapsed.TotalSeconds)
 
     Show-Footer
 
-    Write-Log "Quick Health Check completed."
+   Write-Log @"
+Quick Health Check completed.
+
+Overall Health : $Health
+Administrator  : $IsAdmin
+Internet       : $Internet
+Free Disk (GB) : $FreeDisk
+Defender       : $Defender
+"@
 
     Wait-WRTE
 

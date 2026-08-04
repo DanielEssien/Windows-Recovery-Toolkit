@@ -18,14 +18,17 @@
     "ShowFooter": true
   },
   "Theme": {
-    "Primary": "Cyan",
-    "Secondary": "Green",
-    "Success": "Green",
-    "Warning": "Yellow",
-    "Error": "Red",
-    "Header": "DarkCyan",
-    "Footer": "DarkGray"
-  }, 
+  "Primary": "Cyan",
+  "Secondary": "Green",
+  "Info": "Cyan",
+  "Success": "Green",
+  "Warning": "Yellow",
+  "Error": "Red",
+  "Header": "DarkCyan",
+  "Footer": "DarkGray",
+  "Menu": "White",
+  "Highlight": "Magenta"
+  },
   "Logging": {
     "Enabled": true,
     "FileName": "WRTE.log"
