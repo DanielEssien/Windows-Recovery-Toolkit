@@ -21,6 +21,9 @@ Write-Host "Loading Logger.ps1..." -ForegroundColor Yellow
 Write-Host "Loading Console.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\Console.ps1"
 
+Write-Host "Loading Utilities.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\Utilities.ps1"
+
 Write-Host "Loading System.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\System.ps1"
 
@@ -32,5 +35,11 @@ Write-Host "Loading Bootstrap.ps1..." -ForegroundColor Yellow
 
 Write-Host "Loading Dashboard.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Dashboard\Dashboard.ps1"
+
+Write-Host "Loading Diagnostics.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Diagnostics\Diagnostics.ps1"
+
+Write-Host "Loading QuickHealth.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Diagnostics\QuickHealth.ps1"
 
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

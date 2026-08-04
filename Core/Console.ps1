@@ -147,9 +147,9 @@ function Write-Property {
         [Parameter(Mandatory)]
         [string]$Name,
 
-        [Parameter(Mandatory)]
-        [AllowEmptyString()]
-        [string]$Value
+        [Parameter()]
+        [AllowNull()]
+        $Value
 
     )
 
@@ -204,5 +204,14 @@ function Show-Footer {
 
     Write-Host ""
     Write-Host ("=" * 60) -ForegroundColor DarkGray
+
+}
+
+function Write-BlankLine {
+
+    [CmdletBinding()]
+    param()
+
+    Write-Host ""
 
 }

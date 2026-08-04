@@ -28,23 +28,21 @@ function Get-SystemInformation {
 
             ComputerName = $env:COMPUTERNAME
             CurrentUser  = $env:USERNAME
-
             Manufacturer = $ComputerSystem.Manufacturer
             Model        = $ComputerSystem.Model
-
-            WindowsName    = $OperatingSystem.Caption
-            WindowsVersion = $OperatingSystem.Version
-            BuildNumber    = $OperatingSystem.BuildNumber
-
-            BIOSVersion = ($BIOS.SMBIOSBIOSVersion -join ", ")
+            Windows = $OperatingSystem.Caption
+            Version = $OperatingSystem.Version
+            Build   = $OperatingSystem.BuildNumber
+            OSArchitecture = $OperatingSystem.OSArchitecture
 
             MemoryGB = [Math]::Round(
                 $ComputerSystem.TotalPhysicalMemory / 1GB,
                 2
             )
-
-            PowerShellVersion = $PSVersionTable.PSVersion.ToString()
-
+            PowerShell = $PSVersionTable.PSVersion.ToString()
+            BIOSVersion = ($BIOS.SMBIOSBIOSVersion -join ", ")
+            LastBoot = $OperatingSystem.LastBootUpTime
+            
         }
 
     }

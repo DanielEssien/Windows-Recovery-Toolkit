@@ -27,8 +27,7 @@ function Start-Application {
 
             "1" {
 
-                Write-WRTEWarning "Diagnostics module not implemented yet."
-                Wait-WRTE
+                Show-Diagnostics
 
             }
 
