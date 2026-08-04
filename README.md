@@ -82,6 +82,17 @@ Windows-Recovery-Toolkit
 
 ---
 
+## Current Features
+
+- Dashboard
+- Diagnostics
+  - Quick Health Check
+- Logging
+- Configuration Management
+- Console Framework
+
+---
+
 ## 📅 Roadmap
 
 See **ROADMAP.md**

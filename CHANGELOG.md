@@ -15,3 +15,17 @@ The project follows Semantic Versioning.
 - GitHub integration
 - Bootstrap engine
 - Core folder structure
+
+## v0.3.0 - Quick Health Check
+
+### Added
+- Diagnostics module
+- Quick Health Check
+- Administrator detection
+- Internet connectivity detection
+- Windows Defender status
+- System drive free space detection
+- Overall health assessment
+- Recommendations engine
+- Execution timing
+- Enhanced logging
