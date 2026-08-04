@@ -2,22 +2,30 @@
   "Application": {
     "Name": "Windows Recovery Toolkit Enterprise",
     "ShortName": "WRTE",
-    "Version": "0.1.0",
-    "Edition": "Community",
+    "Version": "0.2.0",
     "Author": "Daniel Ita Essien",
-    "Company": "Center for Integrated Health Programs (CIHP)"
+    "Company": "Daniel Essien",
+    "Motto": "Diagnose. Repair. Restore."
   },
   "Paths": {
     "Logs": "Logs",
     "Reports": "Reports",
     "Resources": "Resources"
   },
+  "Console": {
+    "Width": 100,
+    "ShowBanner": true,
+    "ShowFooter": true
+  },
   "Theme": {
     "Primary": "Cyan",
     "Secondary": "Green",
+    "Success": "Green",
     "Warning": "Yellow",
-    "Error": "Red"
-  },
+    "Error": "Red",
+    "Header": "DarkCyan",
+    "Footer": "DarkGray"
+  }, 
   "Logging": {
     "Enabled": true,
     "FileName": "WRTE.log"
