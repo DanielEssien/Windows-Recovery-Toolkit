@@ -48,4 +48,7 @@ Write-Host "Loading SFC.ps1..." -ForegroundColor Yellow
 Write-Host "Loading DISM.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Diagnostics\DISM.ps1"
 
+Write-Host "Loading DiskCheck.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Diagnostics\DiskCheck.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green
