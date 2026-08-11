@@ -249,13 +249,16 @@ function Show-Footer {
         -Name "Footer" `
         -Fallback DarkGray
 
+    $Copyright = [char]0x00A9
+
     Write-Host ""
     Write-Host ("=" * 60) `
         -ForegroundColor $SeparatorColor
 
     Write-Host (
-        "Version {0} | © 2026 {1}" -f `
+        "Version {0} | {1} 2026 {2}" -f `
         $Config.Application.Version,
+        $Copyright,
         $Config.Application.Author
     ) -ForegroundColor $FooterColor
 }

@@ -42,4 +42,7 @@ Write-Host "Loading Diagnostics.ps1..." -ForegroundColor Yellow
 Write-Host "Loading QuickHealth.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Diagnostics\QuickHealth.ps1"
 
+Write-Host "Loading SFC.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Diagnostics\SFC.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

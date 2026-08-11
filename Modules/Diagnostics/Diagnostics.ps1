@@ -24,7 +24,7 @@ function Show-Diagnostics {
     [CmdletBinding()]
     param()
 
-    do {
+    do  {
 
         Show-Banner
 
