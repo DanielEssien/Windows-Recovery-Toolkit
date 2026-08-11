@@ -22,12 +22,12 @@
   "Secondary": "Green",
   "Info": "Cyan",
   "Success": "Green",
-  "Warning": "Yellow",
+  "Warning": "Yelow",
   "Error": "Red",
-  "Header": "DarkCyan",
-  "Footer": "DarkGray",
-  "Menu": "White",
-  "Highlight": "Magenta"
+  "Section": "Yellow",
+  "Separator": "DarkGray",
+  "Motto": "DarkCyan",
+  "Footer": "DarkGray"
   },
   "Logging": {
     "Enabled": true,

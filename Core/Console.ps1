@@ -21,7 +21,16 @@ function Clear-WRTE {
     Clear-Host
 
 }
+function Get-WRTETheme {
 
+    [CmdletBinding()]
+    param()
+
+    $Config = Get-Configuration
+
+    return $Config.Theme
+
+}
 function Show-Banner {
 
     [CmdletBinding()]
@@ -29,89 +38,118 @@ function Show-Banner {
 
     $Config = Get-Configuration
 
+    $PrimaryColor = Get-WRTEColor `
+        -Name "Primary" `
+        -Fallback Cyan
+
+    $SecondaryColor = Get-WRTEColor `
+        -Name "Secondary" `
+        -Fallback Green
+
+    $MottoColor = Get-WRTEColor `
+        -Name "Motto" `
+        -Fallback DarkCyan
+
     Clear-WRTE
 
     Write-Host ""
-    Write-Host ("=" * 60) -ForegroundColor Cyan
-    Write-Host (" {0}" -f $Config.Application.Name) -ForegroundColor Green
-    Write-Host (" {0}" -f $Config.Application.Motto) -ForegroundColor DarkCyan
-    Write-Host ("=" * 60) -ForegroundColor Cyan
+    Write-Host ("=" * 60) `
+        -ForegroundColor $PrimaryColor
+
+    Write-Host (" {0}" -f $Config.Application.Name) `
+        -ForegroundColor $SecondaryColor
+
+    Write-Host (" {0}" -f $Config.Application.Motto) `
+        -ForegroundColor $MottoColor
+
+    Write-Host ("=" * 60) `
+        -ForegroundColor $PrimaryColor
+
     Write-Host ""
-
 }
-
 function Show-Section {
 
     [CmdletBinding()]
     param(
-
         [Parameter(Mandatory)]
         [string]$Title
-
     )
 
+    $SectionColor = Get-WRTEColor `
+        -Name "Section" `
+        -Fallback Yellow
+
+    $SeparatorColor = Get-WRTEColor `
+        -Name "Separator" `
+        -Fallback DarkGray
+
     Write-Host ""
-    Write-Host $Title -ForegroundColor Yellow
-    Write-Host ("-" * $Title.Length) -ForegroundColor DarkGray
+    Write-Host $Title `
+        -ForegroundColor $SectionColor
 
+    Write-Host ("-" * $Title.Length) `
+        -ForegroundColor $SeparatorColor
 }
-
 function Write-Info {
 
     [CmdletBinding()]
     param(
-
         [Parameter(Mandatory)]
         [string]$Message
-
     )
 
-    Write-Host "[INFO]  $Message" -ForegroundColor Cyan
+    $Color = Get-WRTEColor `
+        -Name "Info" `
+        -Fallback Cyan
 
+    Write-Host "[INFO]  $Message" `
+        -ForegroundColor $Color
 }
-
 function Write-Success {
 
     [CmdletBinding()]
     param(
-
         [Parameter(Mandatory)]
         [string]$Message
-
     )
 
-    Write-Host "[ OK ]  $Message" -ForegroundColor Green
+    $Color = Get-WRTEColor `
+        -Name "Success" `
+        -Fallback Green
 
+    Write-Host "[ OK ]  $Message" `
+        -ForegroundColor $Color
 }
-
 function Write-WRTEWarning {
 
     [CmdletBinding()]
     param(
-
         [Parameter(Mandatory)]
         [string]$Message
-
     )
 
-    Write-Host "[WARN]  $Message" -ForegroundColor Yellow
+    $Color = Get-WRTEColor `
+        -Name "Warning" `
+        -Fallback Yellow
 
+    Write-Host "[WARN]  $Message" `
+        -ForegroundColor $Color
 }
-
 function Write-WRTEError {
 
     [CmdletBinding()]
     param(
-
         [Parameter(Mandatory)]
         [string]$Message
-
     )
 
-    Write-Host "[FAIL]  $Message" -ForegroundColor Red
+    $Color = Get-WRTEColor `
+        -Name "Error" `
+        -Fallback Red
 
+    Write-Host "[FAIL]  $Message" `
+        -ForegroundColor $Color
 }
-
 function Wait-WRTE {
 
     [CmdletBinding()]
@@ -203,12 +241,23 @@ function Show-Footer {
 
     $Config = Get-Configuration
 
-    Write-Host ""
-    Write-Host ("=" * 60) -ForegroundColor DarkGray
-    Write-Host ("Version {0} | © 2026 {1}" -f `
-        $Config.Application.Version,
-        $Config.Application.Author) -ForegroundColor DarkGray
+    $SeparatorColor = Get-WRTEColor `
+        -Name "Separator" `
+        -Fallback DarkGray
 
+    $FooterColor = Get-WRTEColor `
+        -Name "Footer" `
+        -Fallback DarkGray
+
+    Write-Host ""
+    Write-Host ("=" * 60) `
+        -ForegroundColor $SeparatorColor
+
+    Write-Host (
+        "Version {0} | © 2026 {1}" -f `
+        $Config.Application.Version,
+        $Config.Application.Author
+    ) -ForegroundColor $FooterColor
 }
 
 function Write-BlankLine {
@@ -217,5 +266,44 @@ function Write-BlankLine {
     param()
 
     Write-Host ""
+
+}
+
+function Get-WRTEColor {
+
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Name,
+
+        [Parameter(Mandatory)]
+        [ConsoleColor]$Fallback
+    )
+
+    $Theme = Get-WRTETheme
+    $Value = $Theme.$Name
+
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+
+        return $Fallback
+
+    }
+
+    try {
+
+        return [ConsoleColor](
+            [Enum]::Parse(
+                [ConsoleColor],
+                $Value,
+                $true
+            )
+        )
+
+    }
+    catch {
+
+        return $Fallback
+
+    }
 
 }

@@ -44,13 +44,13 @@ function Show-Dashboard {
 
     Write-Property "Computer Name" $SystemInfo.ComputerName
     Write-Property "Current User"  $SystemInfo.CurrentUser
-    Write-Property "Windows"       $SystemInfo.WindowsName
-    Write-Property "Version"       $SystemInfo.WindowsVersion
-    Write-Property "Build"         $SystemInfo.BuildNumber
+    Write-Property "Windows"       $SystemInfo.Windows
+    Write-Property "Version"       $SystemInfo.Version
+    Write-Property "Build"         $SystemInfo.Build
     Write-Property "Manufacturer"  $SystemInfo.Manufacturer
     Write-Property "Model"         $SystemInfo.Model
-    Write-Property "Memory"        "$($SystemInfo.MemoryGB) GB"
-    Write-Property "PowerShell"    $SystemInfo.PowerShellVersion
+    Write-Property "Memory"        ("{0} GB" -f $SystemInfo.MemoryGB)
+    Write-Property "PowerShell"    $SystemInfo.PowerShell
 
     #----------------------------------------------------------
     # Main Menu
