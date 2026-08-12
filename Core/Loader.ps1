@@ -57,4 +57,19 @@ Write-Host "Loading MemoryTest.ps1..." -ForegroundColor Yellow
 Write-Host "Loading Recovery.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Diagnostics\Recovery.ps1"
 
+Write-Host "Loading Hardware.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Hardware\Hardware.ps1"
+
+Write-Host "Loading Hardware Overview..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Hardware\Overview.ps1"
+
+Write-Host "Loading Storage.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Hardware\Storage.ps1"
+
+Write-Host "Loading Battery.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Hardware\Battery.ps1"
+
+Write-Host "Loading BIOS.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Hardware\BIOS.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

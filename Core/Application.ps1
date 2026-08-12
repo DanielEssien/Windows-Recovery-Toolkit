@@ -38,6 +38,12 @@ function Start-Application {
 
             }
 
+            "3" { 
+                
+                Show-Hardware 
+                
+            }
+
             "Q" {
 
                 Write-Log "Application closed."
