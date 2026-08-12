@@ -68,6 +68,7 @@ function Start-DiskCheck {
         Wait-WRTE
         return
     }
+    
 
     Write-BlankLine
     Write-Info "Starting disk scan..."
@@ -76,31 +77,86 @@ function Start-DiskCheck {
 
     $StartTime = Get-Date
 
-    & chkdsk.exe $SystemDrive /scan
+    $DiskOutput = @(
+        & chkdsk.exe $SystemDrive /scan 2>&1 |
+            ForEach-Object {
+
+                $Line = $_.ToString()
+
+                Write-Host $Line
+
+                $Line
+            }
+    )
 
     $ExitCode = $LASTEXITCODE
     $Elapsed  = (Get-Date) - $StartTime
 
+    $DiskText = ($DiskOutput -join "`n") -replace "`0", ""
+    $DiskText = $DiskText -replace '\s+', ' '
+    $DiskText = $DiskText.Trim()
+    
+    $DiskResult = "Unknown"
+
+    if ($DiskText -match "Windows has scanned the file system and found no problems") {
+
+        $DiskResult = "Healthy"
+
+    }
+    elseif ($DiskText -match "Windows found problems with the file system") {
+
+        $DiskResult = "ProblemsFound"
+
+    }
+    elseif ($DiskText -match "errors found") {
+
+        $DiskResult = "ProblemsFound"
+
+    }
+    elseif ($ExitCode -ne 0) {
+
+        $DiskResult = "Failed"
+
+    }
+
     Write-BlankLine
     Show-Section "Disk Check Results"
 
-    if ($ExitCode -eq 0) {
+    switch ($DiskResult) {
 
-        Write-Success "Disk scan completed."
+        "Healthy" {
+
+            Write-Success "No file system problems were detected."
+
+        }
+
+        "ProblemsFound" {
+
+            Write-WRTEWarning "File system problems were detected."
+            Write-Info "A repair operation may be required."
+
+        }
+
+        "Failed" {
+
+            Write-WRTEError "CHKDSK failed with exit code $ExitCode."
+
+        }
+
+        default {
+
+            Write-WRTEWarning "Disk scan completed, but WRTE could not determine the result automatically."
+
+        }
 
     }
-    else {
-
-        Write-WRTEWarning "CHKDSK completed with exit code $ExitCode."
-
-    }
-
+    
     Write-BlankLine
     Write-Property "Drive" $SystemDrive
     Write-Property "Exit Code" $ExitCode
     Write-Property "Execution Time" ("{0:N2} min" -f $Elapsed.TotalMinutes)
 
-    Write-Log "Disk Check completed on $SystemDrive. Exit Code: $ExitCode. Duration: $($Elapsed.TotalMinutes.ToString('N2')) minutes."
+    Write-Log "Disk Check completed on $SystemDrive. Result: $DiskResult. Exit Code: $ExitCode. Duration: $($Elapsed.TotalMinutes.ToString('N2')) minutes."
 
     Show-Footer
 
