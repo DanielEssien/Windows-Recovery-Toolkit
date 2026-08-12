@@ -23,6 +23,13 @@ next restart.
 
 .EXAMPLE
 Start-MemoryTest
+
+.OUTPUTS
+None
+
+.NOTES
+Requires administrator privileges to launch Windows Memory Diagnostic.
+The actual memory test runs outside WRTE and requires a system restart.
 #>
 
 function Start-MemoryTest {
@@ -44,12 +51,12 @@ function Start-MemoryTest {
         Write-Property "Date" `
             ($LatestResult.TimeCreated.ToString("yyyy-MM-dd HH:mm:ss"))
 
-        if ($LatestResult.Message -match "no errors") {
+        if ($LatestResult.Message -match "no.*errors") {
 
             Write-Success "No memory errors were detected."
 
         }
-        elseif ($LatestResult.Message -match "hardware problems") {
+        elseif ($LatestResult.Message -match "hardware.*problems") {
 
             Write-WRTEError "Memory hardware problems were detected."
 
@@ -126,6 +133,25 @@ function Start-MemoryTest {
 
     Wait-WRTE
 }
+
+<#
+.SYNOPSIS
+Retrieves the latest Windows Memory Diagnostic result.
+
+.DESCRIPTION
+Reads the most recent MemoryDiagnostics-Results event
+from the Windows System event log.
+
+.OUTPUTS
+PSCustomObject or null
+
+.EXAMPLE
+Get-MemoryDiagnosticResult
+
+.NOTES
+Returns the event timestamp and diagnostic message when
+a previous memory test result is available.
+#>
 
 function Get-MemoryDiagnosticResult {
 

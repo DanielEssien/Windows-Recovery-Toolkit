@@ -91,9 +91,6 @@ function Start-DISMScan {
     $DismText = $DismText -replace '\s+', ' '
     $DismText = $DismText.Trim()
 
-    $ExitCode = $LASTEXITCODE
-    $Elapsed  = (Get-Date) - $StartTime
-
     $DismResult = "Unknown"
 
     if ($DismText -match "No component store corruption detected") {
@@ -160,12 +157,31 @@ function Start-DISMScan {
     Write-Property "Exit Code" $ExitCode
     Write-Property "Execution Time" ("{0:N2} min" -f $Elapsed.TotalMinutes)
 
-    Write-Log "DISM ScanHealth completed. Exit Code: $ExitCode. Duration: $($Elapsed.TotalMinutes.ToString('N2')) minutes."
+    Write-Log "DISM ScanHealth completed. Result: $DismResult. Exit Code: $ExitCode. Duration: $($Elapsed.TotalMinutes.ToString('N2')) minutes."
 
     Show-Footer
 
     Wait-WRTE
 }
+
+<#
+.SYNOPSIS
+Repairs the Windows component store.
+
+.DESCRIPTION
+Uses DISM /Online /Cleanup-Image /RestoreHealth to detect
+and repair Windows component store corruption.
+
+.OUTPUTS
+None
+
+.EXAMPLE
+Start-DISMRestore
+
+.NOTES
+Requires administrator privileges.
+May use Windows Update as a repair source.
+#>
 
 function Start-DISMRestore {
 

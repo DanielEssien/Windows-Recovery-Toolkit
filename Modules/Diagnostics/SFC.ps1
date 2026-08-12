@@ -23,6 +23,14 @@ and repair detected corruption where possible.
 
 .EXAMPLE
 Start-SFC
+
+.OUTPUTS
+None
+
+.NOTES
+Requires administrator privileges.
+Uses Windows System File Checker to validate and repair
+protected operating system files.
 #>
 
 function Start-SFC {
@@ -173,7 +181,7 @@ function Start-SFC {
     Write-Property "Exit Code" $ExitCode
     Write-Property "Execution Time" ("{0:N2} min" -f $Elapsed.TotalMinutes)
 
-    Write-Log "SFC completed. Result: $SfcResult. Exit Code: $ExitCode. Duration: $($Elapsed.TotalMinutes.ToString('N2')) minutes."
+    Write-Log "SFC scan completed. Result: $SfcResult. Exit Code: $ExitCode. Duration: $($Elapsed.TotalMinutes.ToString('N2')) minutes."
 
     Show-Footer
 

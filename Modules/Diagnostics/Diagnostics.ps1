@@ -6,6 +6,10 @@
 # File       : Diagnostics.ps1
 # Purpose    : Displays the Diagnostics menu.
 #
+# Author     : Daniel Ita Essien
+# Copyright  : (c) 2026 Daniel Ita Essien
+# License    : MIT
+#
 ###############################################################
 
 <#
@@ -24,7 +28,7 @@ function Show-Diagnostics {
     [CmdletBinding()]
     param()
 
-    do  {
+    do {
 
         Show-Banner
 
@@ -38,7 +42,7 @@ function Show-Diagnostics {
         Write-MenuItem "6" "Memory Test"
         Write-MenuItem "7" "Recovery Information"
 
-        Write-Host ""
+        Write-BlankLine
 
         Write-MenuItem "B" "Back"
 

@@ -42,11 +42,7 @@ function Start-QuickHealth {
 
     $Issues = 0
 
-    if (-not $IsAdmin) { $Issues++ }
-
     if (-not $Internet) { $Issues++ }
-
-    if ($Defender -ne "Running") { $Issues++ }
 
     if ($FreeDisk -lt 20) { $Issues++ }
 
@@ -122,25 +118,25 @@ function Start-QuickHealth {
 
     if (-not $IsAdmin) {
 
-        Write-WRTEWarning "• Run WRTE as Administrator."
+        Write-WRTEWarning "Run WRTE as Administrator to access all repair features."
 
     }
 
     if (-not $Internet) {
 
-        Write-WRTEWarning "• Connect to the Internet."
+        Write-WRTEWarning "Connect to the Internet."
 
     }
 
     if ($Defender -ne "Running") {
 
-        Write-WRTEWarning "• Start Microsoft Defender."
+        Write-WRTEWarning "Microsoft Defender service is not running."
 
     }
 
     if ($FreeDisk -lt 20) {
 
-        Write-WRTEWarning "• Free at least 20 GB of disk space."
+        Write-WRTEWarning "Free at least 20 GB of disk space."
 
     }
 

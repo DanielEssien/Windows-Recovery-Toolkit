@@ -23,6 +23,13 @@ configuration information using reagentc.
 
 .EXAMPLE
 Show-RecoveryInformation
+
+.OUTPUTS
+None
+
+.NOTES
+Uses REAGENTC /info to retrieve Windows Recovery
+Environment configuration information.
 #>
 
 function Show-RecoveryInformation {
@@ -51,9 +58,6 @@ function Show-RecoveryInformation {
 
         $ExitCode = $LASTEXITCODE
         $Elapsed  = (Get-Date) - $StartTime
-
-        $RecoveryText = ($RecoveryOutput -join "`n") -replace "`0", ""
-        $RecoveryText = $RecoveryText.Trim()
 
         $RecoveryStatus = $null
         $RecoveryLocation = $null
@@ -118,7 +122,7 @@ function Show-RecoveryInformation {
         Write-Property "Exit Code" $ExitCode
         Write-Property "Execution Time" ("{0:N2} sec" -f $Elapsed.TotalSeconds)
 
-        Write-Log "Recovery Information completed. Exit Code: $ExitCode."
+        Write-Log "Recovery Information completed. Status: $RecoveryStatus. Exit Code: $ExitCode. Duration: $($Elapsed.TotalSeconds.ToString('N2')) seconds."
 
     }
     catch {

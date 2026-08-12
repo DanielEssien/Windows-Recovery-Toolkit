@@ -23,6 +23,20 @@ forcing an offline repair.
 
 .EXAMPLE
 Start-DiskCheck
+
+.OUTPUTS
+None
+
+.NOTES
+Requires administrator privileges.
+Uses CHKDSK /scan to perform a non-repairing online file system scan.
+
+.OUTPUTS
+None
+
+.NOTES
+Requires administrator privileges.
+Uses DISM ScanHealth to inspect the Windows component store.
 #>
 
 function Start-DiskCheck {
@@ -68,7 +82,6 @@ function Start-DiskCheck {
         Wait-WRTE
         return
     }
-    
 
     Write-BlankLine
     Write-Info "Starting disk scan..."
