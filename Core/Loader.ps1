@@ -72,4 +72,19 @@ Write-Host "Loading Battery.ps1..." -ForegroundColor Yellow
 Write-Host "Loading BIOS.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Hardware\BIOS.ps1"
 
+Write-Host "Loading Network.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Networking\Network.ps1"
+
+Write-Host "Loading Network Overview..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Networking\Overview.ps1"
+
+Write-Host "Loading Adapters.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Networking\Adapters.ps1"
+
+Write-Host "Loading Connectivity.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Networking\Connectivity.ps1"
+
+Write-Host "Loading DNS.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Networking\DNS.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

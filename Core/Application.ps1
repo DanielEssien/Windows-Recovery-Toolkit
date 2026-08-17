@@ -39,9 +39,15 @@ function Start-Application {
             }
 
             "3" { 
-                
+    
                 Show-Hardware 
                 
+            }
+
+            "4" {
+
+                Show-Network
+
             }
 
             "Q" {
