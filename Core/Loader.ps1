@@ -93,4 +93,13 @@ Write-Host "Loading Maintenance.ps1..." -ForegroundColor Yellow
 Write-Host "Loading TempCleanup.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Maintenance\TempCleanup.ps1"
 
+Write-Host "Loading WindowsUpdate.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Maintenance\WindowsUpdate.ps1"
+
+Write-Host "Loading DiskCleanup.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Maintenance\DiskCleanup.ps1"
+
+Write-Host "Loading Uptime.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Maintenance\Uptime.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

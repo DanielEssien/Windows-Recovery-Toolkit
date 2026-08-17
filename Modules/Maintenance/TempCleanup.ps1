@@ -171,6 +171,7 @@ function Start-TempCleanup {
             ("{0:N2} sec" -f $Elapsed.TotalSeconds)
         Write-Log "Temporary Files Cleanup completed. Files Removed: $RemovedFiles. Space Recovered: $([Math]::Round($FreedBytes / 1MB, 2)) MB. Duration: $($Elapsed.TotalSeconds.ToString('N2')) seconds."
 
+    }
     catch {
 
         Write-WRTEError "Unable to complete temporary file cleanup."

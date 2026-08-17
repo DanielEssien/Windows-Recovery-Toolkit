@@ -53,20 +53,11 @@ function Show-Maintenance {
 
             "1" { Start-TempCleanup }
 
-            "2" {
-                Write-WRTEWarning "Windows Update Status is not implemented yet."
-                Wait-WRTE
-            }
+            "2" { Show-WindowsUpdateStatus }
 
-            "3" {
-                Write-WRTEWarning "Disk Cleanup is not implemented yet."
-                Wait-WRTE
-            }
+            "3" { Start-DiskCleanup }
 
-            "4" {
-                Write-WRTEWarning "System Uptime is not implemented yet."
-                Wait-WRTE
-            }
+            "4" { Show-SystemUptime }
 
             "B" { return }
 
