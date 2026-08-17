@@ -25,6 +25,11 @@ Show-WindowsUpdateStatus
 
 .OUTPUTS
 None
+
+.NOTES
+Reports Windows Update and BITS service status, checks common
+pending-restart registry locations, and displays the most recent
+installed hotfix available through Get-HotFix.
 #>
 
 function Show-WindowsUpdateStatus {
@@ -130,10 +135,12 @@ function Show-WindowsUpdateStatus {
     }
     catch {
 
-        Write-WRTEError "Unable to retrieve Windows Update status."
-        Write-WRTEError $_.Exception.Message
+        $ErrorMessage = $_.Exception.Message
 
-        Write-Log "Windows Update Status failed. $($_.Exception.Message)" `
+        Write-WRTEError "Unable to retrieve Windows Update status."
+        Write-Info "Error: $ErrorMessage"
+
+        Write-Log "Windows Update Status failed. $ErrorMessage" `
             -Level "ERROR"
 
     }

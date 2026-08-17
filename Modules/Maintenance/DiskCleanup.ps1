@@ -28,8 +28,9 @@ Start-DiskCleanup
 None
 
 .NOTES
-WRTE does not automatically select or remove Disk Cleanup
-categories. The user remains in control of the cleanup process.
+Launches the built-in Windows Disk Cleanup utility.
+WRTE does not automatically select or remove cleanup categories.
+The user remains in control of the cleanup process.
 #>
 
 function Start-DiskCleanup {
@@ -81,6 +82,7 @@ function Start-DiskCleanup {
 
         Write-Log "Disk Cleanup cancelled by user."
 
+        Show-Footer
         Wait-WRTE
         return
     }

@@ -97,6 +97,7 @@ function Start-TempCleanup {
 
             Write-Log "Temporary Files Cleanup cancelled by user."
 
+            Show-Footer
             Wait-WRTE
             return
         }
@@ -158,6 +159,7 @@ function Start-TempCleanup {
 
         $Elapsed = (Get-Date) - $StartTime
 
+        Write-BlankLine
         Show-Section "Cleanup Result"
 
         Write-Success "Temporary file cleanup completed."

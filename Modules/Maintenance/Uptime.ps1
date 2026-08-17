@@ -25,6 +25,9 @@ Show-SystemUptime
 
 .OUTPUTS
 None
+
+.NOTES
+Displays a warning when system uptime reaches 14 days or more.
 #>
 
 function Show-SystemUptime {
@@ -68,7 +71,7 @@ function Show-SystemUptime {
 
         if ($Uptime.TotalDays -ge 14) {
 
-            Write-WRTEWarning "The system has been running for more than 14 days."
+            Write-WRTEWarning "The system has been running for 14 days or more."
             Write-Info "A restart may help complete pending updates and maintenance tasks."
 
             $UptimeStatus = "Extended"

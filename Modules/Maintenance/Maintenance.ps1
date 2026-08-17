@@ -17,8 +17,8 @@
 Displays the Maintenance menu.
 
 .DESCRIPTION
-Provides access to system cleanup, update status,
-disk maintenance, and uptime information.
+Provides access to temporary file cleanup, Windows Update status,
+Disk Cleanup, and system uptime information.
 
 .EXAMPLE
 Show-Maintenance
