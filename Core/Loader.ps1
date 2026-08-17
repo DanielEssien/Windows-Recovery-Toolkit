@@ -87,4 +87,10 @@ Write-Host "Loading Connectivity.ps1..." -ForegroundColor Yellow
 Write-Host "Loading DNS.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Networking\DNS.ps1"
 
+Write-Host "Loading Maintenance.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Maintenance\Maintenance.ps1"
+
+Write-Host "Loading TempCleanup.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Maintenance\TempCleanup.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

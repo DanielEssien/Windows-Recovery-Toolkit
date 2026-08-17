@@ -25,30 +25,21 @@ function Start-Application {
 
         switch ($Selection) {
 
-            "1" {
-
-                Show-Diagnostics
-
-            }
+            "1" { Show-Diagnostics }
 
             "2" {
 
                 Write-WRTEWarning "Windows Repair module not implemented yet."
                 Wait-WRTE
-
             }
 
-            "3" { 
-    
-                Show-Hardware 
-                
-            }
+            "3" { Show-Hardware }
 
-            "4" {
+            "4" { Show-Network }
 
-                Show-Network
+            "5" { Show-Security }
 
-            }
+            "6" { Show-Maintenance }
 
             "Q" {
 
