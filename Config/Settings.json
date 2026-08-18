@@ -32,5 +32,8 @@
   "Logging": {
     "Enabled": true,
     "FileName": "WRTE.log"
+  },
+  "WindowsRepair": {
+    "DryRun": true
   }
 }

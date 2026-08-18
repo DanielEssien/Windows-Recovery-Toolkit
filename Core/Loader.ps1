@@ -102,4 +102,22 @@ Write-Host "Loading DiskCleanup.ps1..." -ForegroundColor Yellow
 Write-Host "Loading Uptime.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Maintenance\Uptime.ps1"
 
+Write-Host "Loading WindowsRepair.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\WindowsRepair\WindowsRepair.ps1"
+
+Write-Host "Loading SystemFiles.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\WindowsRepair\SystemFiles.ps1"
+
+Write-Host "Loading WindowsImage.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\WindowsRepair\WindowsImage.ps1"
+
+Write-Host "Loading NetworkReset.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\WindowsRepair\NetworkReset.ps1"
+
+Write-Host "Loading WindowsUpdateRepair.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\WindowsRepair\WindowsUpdateRepair.ps1"
+
+Write-Host "Loading AdvancedRecovery.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\WindowsRepair\AdvancedRecovery.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

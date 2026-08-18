@@ -27,11 +27,7 @@ function Start-Application {
 
             "1" { Show-Diagnostics }
 
-            "2" {
-
-                Write-WRTEWarning "Windows Repair module not implemented yet."
-                Wait-WRTE
-            }
+            "2" { Show-WindowsRepair }
 
             "3" { Show-Hardware }
 
