@@ -144,4 +144,25 @@ Write-Host "Loading EncryptionProviders.ps1..." -ForegroundColor Yellow
 Write-Host "Loading DiskEncryption.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Security\DiskEncryption.ps1"
 
+Write-Host "Loading OneDrive Overview.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\OneDrive\Overview.ps1"
+
+Write-Host "Loading OneDrive SyncStatus.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\OneDrive\SyncStatus.ps1"
+
+Write-Host "Loading OneDrive KnownFolderBackup.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\OneDrive\KnownFolderBackup.ps1"
+
+Write-Host "Loading OneDrive Accounts.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\OneDrive\Accounts.ps1"
+
+Write-Host "Loading OneDrive Repair.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\OneDrive\Repair.ps1"
+
+Write-Host "Loading OneDrive Settings.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\OneDrive\Settings.ps1"
+
+Write-Host "Loading OneDrive.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\OneDrive\OneDrive.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

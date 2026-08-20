@@ -37,6 +37,14 @@ function Start-Application {
 
             "6" { Show-Maintenance }
 
+            "7" { Show-Microsoft365 }
+
+            "8" { Show-OneDrive }
+
+            "9" { Show-Reports }
+
+            "0" { Show-Tools }
+
             "Q" {
 
                 Write-Log "Application closed."
