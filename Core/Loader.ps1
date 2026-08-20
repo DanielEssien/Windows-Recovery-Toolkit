@@ -120,4 +120,28 @@ Write-Host "Loading WindowsUpdateRepair.ps1..." -ForegroundColor Yellow
 Write-Host "Loading AdvancedRecovery.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\WindowsRepair\AdvancedRecovery.ps1"
 
+Write-Host "Loading Security.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\Security.ps1"
+
+Write-Host "Loading Security Overview..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\Overview.ps1"
+
+Write-Host "Loading Defender.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\Defender.ps1"
+
+Write-Host "Loading Firewall.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\Firewall.ps1"
+
+Write-Host "Loading BitLocker.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\BitLocker.ps1"
+
+Write-Host "Loading SecureBoot.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\SecureBoot.ps1"
+
+Write-Host "Loading EncryptionProviders.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\EncryptionProviders.ps1"
+
+Write-Host "Loading DiskEncryption.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\DiskEncryption.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green
