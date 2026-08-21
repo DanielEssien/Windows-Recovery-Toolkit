@@ -165,4 +165,25 @@ Write-Host "Loading OneDrive Settings.ps1..." -ForegroundColor Yellow
 Write-Host "Loading OneDrive.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\OneDrive\OneDrive.ps1"
 
+Write-Host "Loading Microsoft365 Overview.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Microsoft365\Overview.ps1"
+
+Write-Host "Loading Microsoft365 OfficeInstall.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Microsoft365\OfficeInstall.ps1"
+
+Write-Host "Loading Microsoft365 Activation.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Microsoft365\Activation.ps1"
+
+Write-Host "Loading Microsoft365 Outlook.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Microsoft365\Outlook.ps1"
+
+Write-Host "Loading Microsoft365 Teams.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Microsoft365\Teams.ps1"
+
+Write-Host "Loading Microsoft365 UpdateChannel.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Microsoft365\UpdateChannel.ps1"
+
+Write-Host "Loading Microsoft365.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Microsoft365\Microsoft365.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green
