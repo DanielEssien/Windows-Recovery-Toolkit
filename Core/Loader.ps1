@@ -186,4 +186,19 @@ Write-Host "Loading Microsoft365 UpdateChannel.ps1..." -ForegroundColor Yellow
 Write-Host "Loading Microsoft365.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Microsoft365\Microsoft365.ps1"
 
+Write-Host "Loading Reports ReportHelpers.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Reports\ReportHelpers.ps1"
+
+Write-Host "Loading Reports SystemReport.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Reports\SystemReport.ps1"
+
+Write-Host "Loading Reports DiagnosticReport.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Reports\DiagnosticReport.ps1"
+
+Write-Host "Loading Reports ExportReport.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Reports\ExportReport.ps1"
+
+Write-Host "Loading Reports Reports.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Reports\Reports.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green
