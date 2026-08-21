@@ -123,8 +123,6 @@ function Show-Microsoft365Overview {
         # Teams
         #------------------------------------------------------
 
-        $TeamsDetected = $false
-
         $TeamsPackages = @(
             Get-AppxPackage `
                 -Name "MSTeams" `
@@ -140,13 +138,6 @@ function Show-Microsoft365Overview {
 
             Write-Property "Microsoft Teams" "Not detected"
 
-        }
-
-        if ($TeamsDetected) {
-            Write-Property "Microsoft Teams" "Installed"
-        }
-        else {
-            Write-Property "Microsoft Teams" "Not detected"
         }
 
         Write-Log "Microsoft 365 overview completed." -Level INFO
