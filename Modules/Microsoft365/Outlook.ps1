@@ -346,17 +346,19 @@ function Show-OutlookStatus {
 
         if ($OutlookDataFiles.Count -gt 0) {
 
-            $PSTFiles =
+            $PSTFiles = @(
                 $OutlookDataFiles |
-                Where-Object {
-                    $_.Extension -eq ".pst"
-                }
+                    Where-Object {
+                        $_.Extension -eq ".pst"
+                    }
+            )
 
-            $OSTFiles =
+            $OSTFiles = @(
                 $OutlookDataFiles |
-                Where-Object {
-                    $_.Extension -eq ".ost"
-                }
+                    Where-Object {
+                        $_.Extension -eq ".ost"
+                    }
+            )
 
             Write-Property `
                 "PST Files" `
