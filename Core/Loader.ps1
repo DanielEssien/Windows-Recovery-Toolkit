@@ -201,4 +201,19 @@ Write-Host "Loading Reports ExportReport.ps1..." -ForegroundColor Yellow
 Write-Host "Loading Reports Reports.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Reports\Reports.ps1"
 
+Write-Host "Loading Utilities Environment.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Utilities\Environment.ps1"
+
+Write-Host "Loading Utilities ProcessLookup.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Utilities\ProcessLookup.ps1"
+
+Write-Host "Loading Utilities Utilities.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Utilities\Utilities.ps1"
+
+Write-Host "Loading Utilities AdminTools.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Utilities\AdminTools.ps1"
+
+Write-Host "Loading Utilities ServiceLookup.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Utilities\ServiceLookup.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

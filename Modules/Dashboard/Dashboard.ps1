@@ -67,7 +67,7 @@ function Show-Dashboard {
     Write-MenuItem "7" "Microsoft 365"
     Write-MenuItem "8" "OneDrive"
     Write-MenuItem "9" "Reports"
-    Write-MenuItem "0" "Tools"
+    Write-MenuItem "0" "Utilities"
     Write-MenuItem "Q" "Exit"
 
     Show-Footer

@@ -43,7 +43,7 @@ function Start-Application {
 
             "9" { Show-Reports }
 
-            "0" { Show-Tools }
+            "0" { Show-Utilities }
 
             "Q" {
 
