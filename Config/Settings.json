@@ -2,7 +2,7 @@
   "Application": {
     "Name": "Windows Recovery Toolkit Enterprise",
     "ShortName": "WRTE",
-    "Version": "0.3.0",
+    "Version": "0.4.0-dev",
     "Author": "Daniel Ita Essien",
     "Company": "Daniel Essien",
     "Motto": "Diagnose. Repair. Restore."

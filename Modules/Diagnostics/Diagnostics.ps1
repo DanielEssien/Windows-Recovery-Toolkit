@@ -41,6 +41,7 @@ function Show-Diagnostics {
         Write-MenuItem "5" "Disk Check"
         Write-MenuItem "6" "Memory Test"
         Write-MenuItem "7" "Recovery Information"
+        Write-MenuItem "8" "Event Log Diagnostics"
 
         Write-BlankLine
 
@@ -65,6 +66,8 @@ function Show-Diagnostics {
             "6" { Start-MemoryTest }
 
             "7" { Show-RecoveryInformation }
+
+            "8" { Show-EventLogDiagnostics }
 
             "B" { return }
 

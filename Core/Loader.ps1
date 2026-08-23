@@ -216,4 +216,7 @@ Write-Host "Loading Utilities AdminTools.ps1..." -ForegroundColor Yellow
 Write-Host "Loading Utilities ServiceLookup.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Utilities\ServiceLookup.ps1"
 
+Write-Host "Loading EventLogs.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Diagnostics\EventLogs.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green
