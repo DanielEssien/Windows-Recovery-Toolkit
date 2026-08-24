@@ -222,4 +222,7 @@ Write-Host "Loading EventLogs.ps1..." -ForegroundColor Yellow
 Write-Host "Loading CrashDump.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Diagnostics\CrashDump.ps1"
 
+Write-Host "Loading Startup.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Diagnostics\Startup.ps1"
+
 Write-Host "WRTE modules loaded successfully." -ForegroundColor Green

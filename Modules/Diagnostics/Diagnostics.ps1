@@ -43,6 +43,8 @@ function Show-Diagnostics {
         Write-MenuItem "7" "Recovery Information"
         Write-MenuItem "8" "Event Log Diagnostics"
         Write-MenuItem "9" "Crash & BSOD Diagnostics"
+        Write-MenuItem "10" "Startup Diagnostics"
+        
 
         Write-BlankLine
 
@@ -71,6 +73,8 @@ function Show-Diagnostics {
             "8" { Show-EventLogDiagnostics }
 
             "9" { Show-CrashDumpDiagnostics }
+
+            "10" { Show-StartupDiagnostics }
 
             "B" { return }
 
