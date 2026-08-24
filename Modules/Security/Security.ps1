@@ -44,6 +44,7 @@ function Show-Security {
         Write-MenuItem "4" "BitLocker Status"
         Write-MenuItem "5" "Secure Boot Status"
         Write-MenuItem "6" "Disk Encryption Status"
+        Write-MenuItem "7" "TPM Status"
 
         Write-BlankLine
         Write-MenuItem "B" "Back"
@@ -65,6 +66,8 @@ function Show-Security {
             "5" { Show-SecureBootStatus }
 
             "6" { Show-DiskEncryptionStatus }
+
+            "7" { Show-TPMStatus }
 
             "B" { return }
 

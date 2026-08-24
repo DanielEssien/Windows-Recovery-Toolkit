@@ -147,6 +147,9 @@ Write-Host "Loading EncryptionProviders.ps1..." -ForegroundColor Yellow
 Write-Host "Loading DiskEncryption.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Security\DiskEncryption.ps1"
 
+Write-Host "Loading TPM.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Security\TPM.ps1"
+
 Write-Host "Loading OneDrive Overview.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\OneDrive\Overview.ps1"
 
