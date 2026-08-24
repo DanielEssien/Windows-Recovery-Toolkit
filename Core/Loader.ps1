@@ -72,6 +72,9 @@ Write-Host "Loading Battery.ps1..." -ForegroundColor Yellow
 Write-Host "Loading BIOS.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Hardware\BIOS.ps1"
 
+Write-Host "Loading DriverHealth.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\..\Modules\Hardware\DriverHealth.ps1"
+
 Write-Host "Loading Network.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\..\Modules\Networking\Network.ps1"
 

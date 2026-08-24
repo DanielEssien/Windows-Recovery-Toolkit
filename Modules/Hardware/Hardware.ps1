@@ -40,6 +40,7 @@ function Show-Hardware {
         Write-MenuItem "2" "Storage Devices"
         Write-MenuItem "3" "Battery Information"
         Write-MenuItem "4" "BIOS Information"
+        Write-MenuItem "5" "Driver & Device Health"
 
         Write-BlankLine
         Write-MenuItem "B" "Back"
@@ -57,6 +58,10 @@ function Show-Hardware {
             "3" { Show-BatteryInformation }
 
             "4" { Show-BIOSInformation }
+
+            "5" { Show-DriverHealth }
+
+            
 
             "B" { return }
 
