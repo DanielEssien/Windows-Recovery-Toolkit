@@ -19,7 +19,7 @@ Generates a WRTE diagnostic health report.
 .DESCRIPTION
 Collects a read-only health snapshot of the local computer,
 including operating system, storage, memory, network, security,
-and Microsoft 365 status.
+Microsoft 365, event log, crash, startup, device, and TPM status.
 
 The report is exported as a timestamped text file to the WRTE
 Reports directory.
@@ -452,6 +452,399 @@ function New-WRTEDiagnosticReport {
         $ReportContent += ""
 
         #------------------------------------------------------
+        # Event Log Health
+        #------------------------------------------------------
+
+        $EventWindowStart =
+            (Get-Date).AddHours(-24)
+
+        $SystemErrorEvents = @(
+            Get-WinEvent `
+                -FilterHashtable @{
+                    LogName   = "System"
+                    Level     = 1, 2
+                    StartTime = $EventWindowStart
+                } `
+                -ErrorAction SilentlyContinue
+        )
+
+        $ApplicationErrorEvents = @(
+            Get-WinEvent `
+                -FilterHashtable @{
+                    LogName   = "Application"
+                    Level     = 1, 2
+                    StartTime = $EventWindowStart
+                } `
+                -ErrorAction SilentlyContinue
+        )
+
+        $EventErrorCount =
+            $SystemErrorEvents.Count +
+            $ApplicationErrorEvents.Count
+
+        $ReportContent += "Event Log Health"
+        $ReportContent += "----------------"
+
+        $ReportContent +=
+            "Time Window         : Last 24 hours"
+
+        $ReportContent +=
+            "System Errors       : $($SystemErrorEvents.Count)"
+
+        $ReportContent +=
+            "Application Errors  : $($ApplicationErrorEvents.Count)"
+
+        $ReportContent +=
+            "Total Errors        : $EventErrorCount"
+
+        $ReportContent += ""
+
+        #------------------------------------------------------
+        # Crash / BSOD Health
+        #------------------------------------------------------
+
+        $CrashWindowStart =
+            (Get-Date).AddDays(-30)
+
+        $BugCheckEvents = @(
+            Get-WinEvent `
+                -FilterHashtable @{
+                    LogName   = "System"
+                    Id        = 1001
+                    StartTime = $CrashWindowStart
+                } `
+                -ErrorAction SilentlyContinue |
+            Where-Object {
+                $_.ProviderName -eq
+                    "Microsoft-Windows-WER-SystemErrorReporting"
+            }
+        )
+
+        $MinidumpPath =
+            Join-Path `
+                $env:SystemRoot `
+                "Minidump"
+
+        $MinidumpFiles =
+            if (Test-Path $MinidumpPath) {
+                @(
+                    Get-ChildItem `
+                        -Path $MinidumpPath `
+                        -Filter "*.dmp" `
+                        -File `
+                        -ErrorAction SilentlyContinue
+                )
+            }
+            else {
+                @()
+            }
+
+        $RecentMinidumps = @(
+            $MinidumpFiles |
+                Where-Object {
+                    $_.LastWriteTime -ge $CrashWindowStart
+                }
+        )
+
+        $MemoryDumpPath =
+            Join-Path `
+                $env:SystemRoot `
+                "MEMORY.DMP"
+
+        $MemoryDumpPresent =
+            Test-Path $MemoryDumpPath
+
+        $ReportContent += "Crash / BSOD Health"
+        $ReportContent += "-------------------"
+
+        $ReportContent +=
+            "Time Window         : Last 30 days"
+
+        $ReportContent +=
+            "BugCheck Events     : $($BugCheckEvents.Count)"
+
+        $ReportContent +=
+            "Recent Minidumps    : $($RecentMinidumps.Count)"
+
+        $ReportContent +=
+            "MEMORY.DMP Present  : $MemoryDumpPresent"
+
+        $ReportContent += ""
+
+        #------------------------------------------------------
+        # Startup Health
+        #------------------------------------------------------
+
+        $StartupApplications = @()
+
+        $StartupRegistryPaths = @(
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run",
+            "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run",
+            "HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Run"
+        )
+
+        foreach ($StartupRegistryPath in $StartupRegistryPaths) {
+
+            if (-not (Test-Path $StartupRegistryPath)) {
+                continue
+            }
+
+            try {
+
+                $StartupProperties =
+                    Get-ItemProperty `
+                        -Path $StartupRegistryPath `
+                        -ErrorAction Stop
+
+                foreach (
+                    $Property in
+                    $StartupProperties.PSObject.Properties
+                ) {
+
+                    if (
+                        $Property.Name -in
+                        "(default)",
+                        "PSPath",
+                        "PSParentPath",
+                        "PSChildName",
+                        "PSDrive",
+                        "PSProvider"
+                    ) {
+                        continue
+                    }
+
+                    $StartupApplications +=
+                        $Property.Name
+                }
+            }
+            catch {
+                # Report generation continues if one startup
+                # registry location cannot be read.
+            }
+        }
+
+        $StartupFolders = @(
+            Join-Path `
+                $env:APPDATA `
+                "Microsoft\Windows\Start Menu\Programs\Startup",
+
+            Join-Path `
+                $env:ProgramData `
+                "Microsoft\Windows\Start Menu\Programs\Startup"
+        )
+
+        foreach ($StartupFolder in $StartupFolders) {
+
+            if (-not (Test-Path $StartupFolder)) {
+                continue
+            }
+
+            $StartupFolderItems = @(
+                Get-ChildItem `
+                    -Path $StartupFolder `
+                    -File `
+                    -ErrorAction SilentlyContinue
+            )
+
+            foreach ($StartupFolderItem in $StartupFolderItems) {
+                $StartupApplications +=
+                    $StartupFolderItem.Name
+            }
+        }
+
+        $StartupTasks = @()
+
+        try {
+
+            $ScheduledTasks = @(
+                Get-ScheduledTask `
+                    -ErrorAction Stop
+            )
+
+            foreach ($ScheduledTask in $ScheduledTasks) {
+
+                $StartupTriggers = @(
+                    $ScheduledTask.Triggers |
+                        Where-Object {
+                            $_.CimClass.CimClassName -in
+                            "MSFT_TaskBootTrigger",
+                            "MSFT_TaskLogonTrigger"
+                        }
+                )
+
+                if (
+                    $StartupTriggers.Count -gt 0 -and
+                    $ScheduledTask.State -ne "Disabled"
+                ) {
+
+                    $StartupTasks +=
+                        $ScheduledTask
+                }
+            }
+        }
+        catch {
+            $StartupTasks = @()
+        }
+
+        $WindowsSystemStartupTasks = @(
+            $StartupTasks |
+                Where-Object {
+                    $_.TaskPath -like "\Microsoft\Windows\*"
+                }
+        )
+
+        $OtherStartupTasks = @(
+            $StartupTasks |
+                Where-Object {
+                    $_.TaskPath -notlike "\Microsoft\Windows\*"
+                }
+        )
+
+        $StartupLoadItems =
+            $StartupApplications.Count +
+            $OtherStartupTasks.Count
+
+        $ReportContent += "Startup Health"
+        $ReportContent += "--------------"
+
+        $ReportContent +=
+            "Startup Apps        : $($StartupApplications.Count)"
+
+        $ReportContent +=
+            "Windows Tasks       : $($WindowsSystemStartupTasks.Count)"
+
+        $ReportContent +=
+            "Other Startup Tasks : $($OtherStartupTasks.Count)"
+
+        $ReportContent +=
+            "Startup Load Items  : $StartupLoadItems"
+
+        $ReportContent += ""
+
+        #------------------------------------------------------
+        # Driver & Device Health
+        #------------------------------------------------------
+
+        $PnPDevices = @(
+            Get-CimInstance `
+                -ClassName Win32_PnPEntity `
+                -ErrorAction SilentlyContinue
+        )
+
+        $ProblemDevices = @(
+            $PnPDevices |
+                Where-Object {
+                    $_.ConfigManagerErrorCode -ne 0
+                }
+        )
+
+        $DisabledDevices = @(
+            $ProblemDevices |
+                Where-Object {
+                    $_.ConfigManagerErrorCode -eq 22
+                }
+        )
+
+        $ActiveProblemDevices = @(
+            $ProblemDevices |
+                Where-Object {
+                    $_.ConfigManagerErrorCode -ne 22
+                }
+        )
+
+        $ReportContent += "Driver & Device Health"
+        $ReportContent += "----------------------"
+
+        $ReportContent +=
+            "Devices Detected    : $($PnPDevices.Count)"
+
+        $ReportContent +=
+            "Active Problems     : $($ActiveProblemDevices.Count)"
+
+        $ReportContent +=
+            "Disabled Devices    : $($DisabledDevices.Count)"
+
+        $ReportContent += ""
+
+        #------------------------------------------------------
+        # TPM Health
+        #------------------------------------------------------
+
+        $TPMPresent = $false
+        $TPMReady = $false
+        $TPMEnabled = $false
+        $TPMSpecification = "Unavailable"
+
+        $TPMCommand =
+            Get-Command `
+                -Name Get-Tpm `
+                -ErrorAction SilentlyContinue
+
+        if ($TPMCommand) {
+
+            try {
+
+                $TPM =
+                    Get-Tpm `
+                        -ErrorAction Stop
+
+                if ($TPM) {
+
+                    $TPMPresent =
+                        [bool]$TPM.TpmPresent
+
+                    $TPMReady =
+                        [bool]$TPM.TpmReady
+
+                    $TPMEnabled =
+                        [bool]$TPM.TpmEnabled
+                }
+            }
+            catch {
+                # Fall through to CIM query.
+            }
+        }
+
+        try {
+
+            $TPMCim =
+                Get-CimInstance `
+                    -Namespace "root\CIMV2\Security\MicrosoftTpm" `
+                    -ClassName Win32_Tpm `
+                    -ErrorAction Stop
+
+            if ($TPMCim) {
+
+                $TPMPresent = $true
+
+                if ($TPMCim.SpecVersion) {
+                    $TPMSpecification =
+                        $TPMCim.SpecVersion
+                }
+            }
+        }
+        catch {
+            # TPM may not exist or may be inaccessible.
+        }
+
+        $ReportContent += "TPM Health"
+        $ReportContent += "----------"
+
+        $ReportContent +=
+            "TPM Present         : $TPMPresent"
+
+        $ReportContent +=
+            "TPM Ready           : $TPMReady"
+
+        $ReportContent +=
+            "TPM Enabled         : $TPMEnabled"
+
+        $ReportContent +=
+            "Specification      : $TPMSpecification"
+
+        $ReportContent += ""
+
+        #------------------------------------------------------
         # Overall Assessment
         #------------------------------------------------------
 
@@ -493,6 +886,57 @@ function New-WRTEDiagnosticReport {
             $Issues +=
                 "No active network adapter detected"
 
+        }
+
+        # Event Log assessment
+
+        if ($EventErrorCount -gt 50) {
+
+            $Issues +=
+                "High number of Windows errors detected in the last 24 hours"
+        }
+
+        # Crash / BSOD assessment
+
+        if (
+            $BugCheckEvents.Count -gt 0 -or
+            $RecentMinidumps.Count -gt 0
+        ) {
+
+            $Issues +=
+                "Recent Windows crash or BSOD activity detected"
+        }
+
+        # Startup assessment
+
+        if ($StartupLoadItems -ge 20) {
+
+            $Issues +=
+                "High user-impacting startup load detected"
+        }
+
+        # Driver / device assessment
+
+        if ($ActiveProblemDevices.Count -gt 0) {
+
+            $Issues +=
+                "$($ActiveProblemDevices.Count) active device or driver problem(s) detected"
+        }
+
+        # TPM assessment
+
+        if (-not $TPMPresent) {
+
+            $Issues +=
+                "Trusted Platform Module not detected"
+        }
+        elseif (
+            -not $TPMEnabled -or
+            -not $TPMReady
+        ) {
+
+            $Issues +=
+                "Trusted Platform Module is not fully ready"
         }
 
         $ReportContent += "Overall Assessment"
