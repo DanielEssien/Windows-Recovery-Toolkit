@@ -44,18 +44,36 @@ function Start-WindowsUpdateRepair {
     Show-Banner
     Show-Section "Repair Windows Update Components"
 
-    $Config = Get-Configuration
-    $DryRun = $Config.WindowsRepair.DryRun
+    $Config =
+    Get-Configuration
+
+    $GlobalDryRun =
+        [bool]$Config.WindowsRepair.DryRun
+
+    $LiveFeatureEnabled =
+        [bool]$Config.WindowsRepair.LiveFeatures.WindowsUpdateRepair
+
+    $DryRun =
+        $GlobalDryRun -or
+        (-not $LiveFeatureEnabled)
 
     Write-Info "Preparing Windows Update component repair..."
 
     if ($DryRun) {
 
         Write-BlankLine
-        Write-WRTEWarning "DRY-RUN mode is enabled."
+        Write-WRTEWarning "Windows Update Repair is running in DRY-RUN mode."
         Write-Info "Windows Update repair actions will be simulated."
         Write-Info "No services or update cache folders will be modified."
 
+        if (
+            -not $GlobalDryRun -and
+            -not $LiveFeatureEnabled
+        ) {
+
+            Write-Info `
+                "Live execution for Windows Update Repair is not enabled."
+        }
     }
 
     if (-not $DryRun) {
@@ -80,6 +98,13 @@ function Start-WindowsUpdateRepair {
 
     Write-BlankLine
     Write-WRTEWarning "This operation resets common Windows Update components."
+
+    if (-not $DryRun) {
+
+        Write-WRTEWarning "Windows Update-related services will be temporarily stopped."
+        Write-WRTEWarning "Windows Update cache folders will be renamed."
+        Write-WRTEWarning "Do not interrupt WRTE while the repair is in progress."
+    }
 
     Write-Info "Services:"
     Write-Property "Windows Update" "wuauserv"
@@ -199,23 +224,6 @@ function Start-WindowsUpdateRepair {
 
         Write-Success "Windows Update cache folders refreshed."
 
-        Write-BlankLine
-        Write-Info "Restarting Windows Update services..."
-
-        foreach ($ServiceName in $Services) {
-
-            if (-not $ServiceStates.ContainsKey($ServiceName)) {
-                continue
-            }
-
-            if ($ServiceStates[$ServiceName] -eq "Running") {
-
-                Start-Service `
-                    -Name $ServiceName `
-                    -ErrorAction SilentlyContinue
-            }
-        }
-
         $Elapsed = (Get-Date) - $StartTime
 
         Show-Section "Repair Result"
@@ -241,20 +249,40 @@ function Start-WindowsUpdateRepair {
         Write-Log "Windows Update Repair failed. $ErrorMessage" `
             -Level "ERROR"
 
-        Write-BlankLine
-        Write-Info "Attempting to restart Windows Update services..."
+    }
 
-        foreach ($ServiceName in $Services) {
+    finally {
 
-            if (-not $ServiceStates.ContainsKey($ServiceName)) {
-                continue
-            }
+        if ($ServiceStates.Count -gt 0) {
 
-            if ($ServiceStates[$ServiceName] -eq "Running") {
+            Write-BlankLine
+            Write-Info "Restoring Windows Update service states..."
 
-                Start-Service `
-                    -Name $ServiceName `
-                    -ErrorAction SilentlyContinue
+            foreach ($ServiceName in $Services) {
+
+                if (-not $ServiceStates.ContainsKey($ServiceName)) {
+                    continue
+                }
+
+                if ($ServiceStates[$ServiceName] -eq "Running") {
+
+                    try {
+
+                        Start-Service `
+                            -Name $ServiceName `
+                            -ErrorAction Stop
+
+                    }
+                    catch {
+
+                        Write-WRTEWarning `
+                            "Unable to restart service: $ServiceName"
+
+                        Write-Log `
+                            "Windows Update Repair could not restore service '$ServiceName'. $($_.Exception.Message)" `
+                            -Level "WARNING"
+                    }
+                }
             }
         }
     }

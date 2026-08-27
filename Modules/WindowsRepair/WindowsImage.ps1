@@ -42,18 +42,36 @@ function Start-WindowsImageRepair {
     Show-Banner
     Show-Section "Repair Windows Image"
 
-    $Config = Get-Configuration
-    $DryRun = $Config.WindowsRepair.DryRun
+    $Config =
+    Get-Configuration
+
+    $GlobalDryRun =
+        [bool]$Config.WindowsRepair.DryRun
+
+    $LiveFeatureEnabled =
+        [bool]$Config.WindowsRepair.LiveFeatures.WindowsImageRepair
+
+    $DryRun =
+        $GlobalDryRun -or
+        (-not $LiveFeatureEnabled)
 
     Write-Info "Preparing Windows image repair..."
 
     if ($DryRun) {
 
         Write-BlankLine
-        Write-WRTEWarning "DRY-RUN mode is enabled."
+        Write-WRTEWarning "Windows Image Repair is running in DRY-RUN mode."
         Write-Info "DISM RestoreHealth will be simulated."
         Write-Info "No changes will be made to the Windows image."
 
+        if (
+            -not $GlobalDryRun -and
+            -not $LiveFeatureEnabled
+        ) {
+
+            Write-Info `
+                "Live execution for Windows Image Repair is not enabled."
+        }
     }
 
     if (-not $DryRun) {
@@ -125,7 +143,9 @@ function Start-WindowsImageRepair {
                 /RestoreHealth 2>&1 |
                 ForEach-Object {
 
-                    $Line = $_.ToString()
+                    $Line =
+                        $_.ToString() `
+                        -replace "`0", ""
 
                     Write-Host $Line
 
@@ -142,6 +162,16 @@ function Start-WindowsImageRepair {
 
         $Result = switch -Regex ($DismText) {
 
+            "0x800f081f" {
+                "SourceMissing"
+                break
+            }
+
+            "source files could not be found" {
+                "SourceMissing"
+                break
+            }
+
             "restore operation completed successfully" {
                 "Repaired"
                 break
@@ -149,11 +179,6 @@ function Start-WindowsImageRepair {
 
             "component store corruption was repaired" {
                 "Repaired"
-                break
-            }
-
-            "source files could not be found" {
-                "SourceMissing"
                 break
             }
 
@@ -180,7 +205,8 @@ function Start-WindowsImageRepair {
             "Repaired" {
 
                 Write-Success "Windows image repair completed successfully."
-                Write-Info "Consider running System File Checker afterward."
+                Write-Info "DISM repaired the Windows component store."
+                Write-Info "Running System File Checker afterward is recommended."
 
             }
             
@@ -194,7 +220,8 @@ function Start-WindowsImageRepair {
             "SourceMissing" {
 
                 Write-WRTEWarning "DISM could not locate the required repair source."
-                Write-Info "A Windows installation source may be required."
+                Write-Info "Windows Update or a matching Windows installation source may be required."
+                Write-Info "DISM error 0x800f081f commonly indicates missing repair source files."
 
             }
 

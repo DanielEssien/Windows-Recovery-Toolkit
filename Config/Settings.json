@@ -34,6 +34,12 @@
     "FileName": "WRTE.log"
   },
   "WindowsRepair": {
-    "DryRun": true
+      "DryRun": true,
+      "LiveFeatures": {
+          "SystemFileRepair": true,
+          "WindowsImageRepair": true,
+          "NetworkStackReset": true,
+          "WindowsUpdateRepair": true
+      }
   }
 }

@@ -43,18 +43,36 @@ function Start-SystemFileRepair {
     Show-Banner
     Show-Section "Repair System Files"
 
-    $Config = Get-Configuration
-    $DryRun = $Config.WindowsRepair.DryRun
+    $Config =
+    Get-Configuration
+
+    $GlobalDryRun =
+        [bool]$Config.WindowsRepair.DryRun
+
+    $LiveFeatureEnabled =
+        [bool]$Config.WindowsRepair.LiveFeatures.SystemFileRepair
+
+    $DryRun =
+        $GlobalDryRun -or
+        (-not $LiveFeatureEnabled)
 
     Write-Info "Preparing System File Checker repair..."
 
     if ($DryRun) {
 
         Write-BlankLine
-        Write-WRTEWarning "DRY-RUN mode is enabled."
+        Write-WRTEWarning "System File Repair is running in DRY-RUN mode."
         Write-Info "SFC repair will be simulated."
         Write-Info "No system files will be scanned or modified."
 
+        if (
+            -not $GlobalDryRun -and
+            -not $LiveFeatureEnabled
+        ) {
+
+            Write-Info `
+                "Live execution for System File Repair is not enabled."
+        }
     }
 
     if (-not $DryRun) {
@@ -123,7 +141,9 @@ function Start-SystemFileRepair {
             & "$env:SystemRoot\System32\sfc.exe" /scannow 2>&1 |
                 ForEach-Object {
 
-                    $Line = $_.ToString()
+                    $Line =
+                        $_.ToString() `
+                        -replace "`0", ""
 
                     Write-Host $Line
 

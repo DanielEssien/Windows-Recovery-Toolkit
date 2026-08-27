@@ -42,18 +42,36 @@ function Start-NetworkStackReset {
     Show-Banner
     Show-Section "Reset Network Stack"
 
-    $Config = Get-Configuration
-    $DryRun = $Config.WindowsRepair.DryRun
+    $Config =
+        Get-Configuration
+
+    $GlobalDryRun =
+        [bool]$Config.WindowsRepair.DryRun
+
+    $LiveFeatureEnabled =
+        [bool]$Config.WindowsRepair.LiveFeatures.NetworkStackReset
+
+    $DryRun =
+        $GlobalDryRun -or
+        (-not $LiveFeatureEnabled)
 
     Write-Info "Preparing network stack reset..."
 
     if ($DryRun) {
 
         Write-BlankLine
-        Write-WRTEWarning "DRY-RUN mode is enabled."
+        Write-WRTEWarning "Network Stack Reset is running in DRY-RUN mode."
         Write-Info "Network reset commands will be simulated."
         Write-Info "No network configuration will be changed."
 
+        if (
+            -not $GlobalDryRun -and
+            -not $LiveFeatureEnabled
+        ) {
+
+            Write-Info `
+                "Live execution for Network Stack Reset is not enabled."
+        }
     }
 
     if (-not $DryRun) {
@@ -78,6 +96,12 @@ function Start-NetworkStackReset {
 
     Write-BlankLine
     Write-WRTEWarning "This operation may temporarily disrupt network connectivity."
+
+    if (-not $DryRun) {
+
+        Write-WRTEWarning "Active network sessions may be interrupted."
+        Write-WRTEWarning "A Windows restart is recommended after the reset."
+    }
 
     Write-Info "Commands:"
     Write-Property "Winsock Reset" "netsh winsock reset"
