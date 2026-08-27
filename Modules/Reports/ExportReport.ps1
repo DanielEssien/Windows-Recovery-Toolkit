@@ -20,8 +20,11 @@ Exports the latest WRTE report.
 Locates the most recently generated WRTE text report in the
 Reports directory and copies it to the current user's Desktop.
 
-If a file with the same name already exists on the Desktop,
-a timestamp is appended to prevent the existing file from
+If matching JSON or HTML companion reports exist, they are
+exported alongside the text report.
+
+If files with the same names already exist on the Desktop,
+a shared timestamp is appended to prevent existing files from
 being overwritten.
 
 .EXAMPLE
@@ -101,6 +104,22 @@ function Export-LatestWRTEReport {
                     $null
                 }
 
+            $CompanionHtmlFile =
+                [System.IO.Path]::ChangeExtension(
+                    $LatestReport.FullName,
+                    ".html"
+                )
+
+            $HtmlReport =
+                if (Test-Path -Path $CompanionHtmlFile) {
+                    Get-Item `
+                        -Path $CompanionHtmlFile `
+                        -ErrorAction Stop
+                }
+                else {
+                    $null
+                }
+
             #--------------------------------------------------
             # Export Destination
             #--------------------------------------------------
@@ -137,6 +156,18 @@ function Export-LatestWRTEReport {
                 else {
                     $null
                 }
+            
+            $DestinationHtmlFile =
+                if ($HtmlReport) {
+
+                    Join-Path `
+                        -Path $DesktopPath `
+                        -ChildPath $HtmlReport.Name
+
+                }
+                else {
+                    $null
+                }
 
             #--------------------------------------------------
             # Prevent Overwrite
@@ -155,9 +186,19 @@ function Export-LatestWRTEReport {
                     $false
                 }
 
+            $HtmlDestinationExists =
+                if ($DestinationHtmlFile) {
+                    Test-Path `
+                        -Path $DestinationHtmlFile
+                }
+                else {
+                    $false
+                }
+
             if (
                 $TextDestinationExists -or
-                $JsonDestinationExists
+                $JsonDestinationExists -or
+                $HtmlDestinationExists
             ) {
 
                 $Timestamp =
@@ -180,6 +221,16 @@ function Export-LatestWRTEReport {
                                 "$BaseName-Exported-$Timestamp.json"
                             )
                 }
+            
+                if ($HtmlReport) {
+
+                    $DestinationHtmlFile =
+                        Join-Path `
+                            -Path $DesktopPath `
+                            -ChildPath (
+                                "$BaseName-Exported-$Timestamp.html"
+                            )
+                }
             }
 
             #--------------------------------------------------
@@ -196,6 +247,14 @@ function Export-LatestWRTEReport {
                 Copy-Item `
                     -Path $JsonReport.FullName `
                     -Destination $DestinationJsonFile `
+                    -ErrorAction Stop
+            }
+
+            if ($HtmlReport) {
+
+                Copy-Item `
+                    -Path $HtmlReport.FullName `
+                    -Destination $DestinationHtmlFile `
                     -ErrorAction Stop
             }
 
@@ -223,6 +282,17 @@ function Export-LatestWRTEReport {
                     $DestinationJsonFile
             }
 
+            if ($HtmlReport) {
+
+                Write-Property `
+                    "HTML Source" `
+                    $HtmlReport.FullName
+
+                Write-Property `
+                    "HTML Destination" `
+                    $DestinationHtmlFile
+            }
+
             $ReportSizeKB =
                 [math]::Round(
                     $LatestReport.Length / 1KB,
@@ -247,9 +317,10 @@ function Export-LatestWRTEReport {
                 ("{0:N2} sec" -f $Duration.TotalSeconds)
 
             Write-Log `
-                ("Latest WRTE report exported. Text: {0}. JSON: {1}. Duration: {2:N2} seconds." `
+                ("Latest WRTE report exported. Text: {0}. JSON: {1}. HTML: {2}. Duration: {3:N2} seconds." `
                 -f $DestinationTextFile,
                     $DestinationJsonFile,
+                    $DestinationHtmlFile,
                     $Duration.TotalSeconds) `
                 -Level INFO
 

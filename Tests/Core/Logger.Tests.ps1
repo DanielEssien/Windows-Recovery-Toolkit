@@ -19,6 +19,11 @@ BeforeAll {
             -Parent `
             (Split-Path -Parent $PSScriptRoot)
 
+    $ConfigurationValidationFile =
+        Join-Path `
+            $ProjectRoot `
+            "Core\ConfigurationValidation.ps1"
+
     $ConfigurationFile =
         Join-Path `
             $ProjectRoot `
@@ -29,6 +34,7 @@ BeforeAll {
             $ProjectRoot `
             "Core\Logger.ps1"
 
+    . $ConfigurationValidationFile
     . $ConfigurationFile
     . $LoggerFile
 

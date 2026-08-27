@@ -23,6 +23,8 @@ BeforeAll {
     . (Join-Path $ProjectRoot "Core\Configuration.ps1")
     . (Join-Path $ProjectRoot "Core\Logger.ps1")
     . (Join-Path $ProjectRoot "Core\Bootstrap.ps1")
+
+    function Start-Application {}
 }
 
 Describe "WRTE Bootstrap" {

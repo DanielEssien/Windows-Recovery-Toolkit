@@ -974,6 +974,15 @@ function New-WRTEDiagnosticReport {
                 -Encoding UTF8 `
                 -ErrorAction Stop
 
+        $HtmlFileName =
+            "{0}.html" -f
+            [System.IO.Path]::GetFileNameWithoutExtension($ReportFileName)
+
+        $HtmlReportFile =
+            Join-Path `
+                -Path $ReportDirectory `
+                -ChildPath $HtmlFileName     
+
         #------------------------------------------------------
         # Export Structured JSON Report
         #------------------------------------------------------
@@ -1219,6 +1228,322 @@ function New-WRTEDiagnosticReport {
                 -Encoding UTF8 `
                 -ErrorAction Stop
 
+    # HTML generation starts here
+$HtmlStyle = @"
+<style>
+    body {
+        font-family: Segoe UI, Arial, sans-serif;
+        margin: 40px;
+        background-color: #f5f7fa;
+        color: #1f2937;
+    }
+
+    h1 {
+        margin-bottom: 4px;
+    }
+
+    h2 {
+        margin-top: 32px;
+        border-bottom: 1px solid #d1d5db;
+        padding-bottom: 6px;
+    }
+
+    .subtitle {
+        color: #6b7280;
+        margin-bottom: 24px;
+    }
+
+    .card {
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 18px;
+        margin-bottom: 18px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+        width: 35%;
+        background-color: #f9fafb;
+    }
+
+    .healthy {
+        font-weight: bold;
+    }
+
+    .warning {
+        font-weight: bold;
+    }
+
+    .footer {
+        margin-top: 40px;
+        font-size: 12px;
+        color: #6b7280;
+        text-align: center;
+    }
+
+    @media print {
+        body {
+            background-color: #ffffff;
+            margin: 20px;
+        }
+
+        .card {
+            break-inside: avoid;
+        }
+    }
+</style>
+"@
+
+        $OperatingSystemHtml =
+            [pscustomobject]$DiagnosticData.OperatingSystem |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $UptimeHtml =
+            [pscustomobject]$DiagnosticData.Uptime |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $MemoryHtml =
+            [pscustomobject]$DiagnosticData.Memory |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $StorageHtml =
+            $DiagnosticData.Storage |
+            ConvertTo-Html `
+                -Fragment
+
+        $NetworkHtml =
+            @(
+                foreach ($Adapter in $DiagnosticData.Network) {
+
+                    [pscustomobject]@{
+                        Adapter =
+                            $Adapter.Adapter
+
+                        DHCPEnabled =
+                            $Adapter.DHCPEnabled
+
+                        IPv4Addresses =
+                            ($Adapter.IPv4Addresses -join ", ")
+
+                        DefaultGateway =
+                            ($Adapter.DefaultGateway -join ", ")
+
+                        DNSServers =
+                            ($Adapter.DNSServers -join ", ")
+                    }
+                }
+            ) |
+        ConvertTo-Html `
+            -Fragment
+
+        $FirewallHtml =
+            $DiagnosticData.Security.Firewall |
+            ConvertTo-Html `
+                -Fragment
+
+        $DefenderHtml =
+            [pscustomobject]$DiagnosticData.Security.Defender |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $Microsoft365Html =
+            [pscustomobject]$DiagnosticData.Microsoft365 |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $EventLogHtml =
+            [pscustomobject]$DiagnosticData.EventLogHealth |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $CrashHtml =
+            [pscustomobject]$DiagnosticData.CrashHealth |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $StartupHtml =
+            [pscustomobject]$DiagnosticData.StartupHealth |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $DeviceHtml =
+            [pscustomobject]@{
+                DevicesDetected =
+                    $DiagnosticData.DeviceHealth.DevicesDetected
+
+                ActiveProblems =
+                    $DiagnosticData.DeviceHealth.ActiveProblems
+
+                DisabledDevices =
+                    $DiagnosticData.DeviceHealth.DisabledDevices
+
+                ProblemDevices =
+                    if ($DiagnosticData.DeviceHealth.ProblemDevices.Count -gt 0) {
+                        (
+                            $DiagnosticData.DeviceHealth.ProblemDevices |
+                            ForEach-Object {
+                                "$($_.Name) (Error Code $($_.ErrorCode))"
+                            }
+                        ) -join "; "
+                    }
+                    else {
+                        "None"
+                    }
+            } |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $TpmHtml =
+            [pscustomobject]$DiagnosticData.TPM |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $AssessmentHtml =
+            [pscustomobject]@{
+                Status =
+                    $DiagnosticData.Assessment.Status
+
+                IssueCount =
+                    $DiagnosticData.Assessment.IssueCount
+
+                Issues =
+                    if ($DiagnosticData.Assessment.Issues.Count -gt 0) {
+                        $DiagnosticData.Assessment.Issues -join "; "
+                    }
+                    else {
+                        "None"
+                    }
+            } |
+            ConvertTo-Html `
+                -Fragment `
+                -As List
+
+        $HtmlBody = @"
+<h1>Windows Recovery Toolkit Enterprise</h1>
+
+<div class="subtitle">
+    Diagnostic Report<br>
+    Computer: $($DiagnosticData.Report.Computer)<br>
+    Generated: $($DiagnosticData.Report.GeneratedAt)<br>
+    Schema Version: $($DiagnosticData.Report.SchemaVersion)
+</div>
+
+<div class="card">
+    <h2>Operating System</h2>
+    $OperatingSystemHtml
+</div>
+
+<div class="card">
+    <h2>System Uptime</h2>
+    $UptimeHtml
+</div>
+
+<div class="card">
+    <h2>Memory</h2>
+    $MemoryHtml
+</div>
+
+<div class="card">
+    <h2>Storage</h2>
+    $StorageHtml
+</div>
+
+<div class="card">
+    <h2>Network</h2>
+    $NetworkHtml
+</div>
+
+<div class="card">
+    <h2>Firewall</h2>
+    $FirewallHtml
+</div>
+
+<div class="card">
+    <h2>Microsoft Defender</h2>
+    $DefenderHtml
+</div>
+
+<div class="card">
+    <h2>Microsoft 365</h2>
+    $Microsoft365Html
+</div>
+
+<div class="card">
+    <h2>Event Log Health</h2>
+    $EventLogHtml
+</div>
+
+<div class="card">
+    <h2>Crash / BSOD Health</h2>
+    $CrashHtml
+</div>
+
+<div class="card">
+    <h2>Startup Health</h2>
+    $StartupHtml
+</div>
+
+<div class="card">
+    <h2>Device Health</h2>
+    $DeviceHtml
+</div>
+
+<div class="card">
+    <h2>TPM</h2>
+    $TpmHtml
+</div>
+
+<div class="card">
+    <h2>Assessment</h2>
+    $AssessmentHtml
+</div>
+
+<div class="footer">
+    Windows Recovery Toolkit Enterprise — Diagnose. Repair. Restore.
+</div>
+"@
+
+        $HtmlDocument =
+            ConvertTo-Html `
+                -Title "WRTE Diagnostic Report" `
+                -Head $HtmlStyle `
+                -Body $HtmlBody
+
+        $HtmlDocument =
+            $HtmlDocument `
+            -replace "<table>\s*</table>", ""
+
+        $HtmlDocument |
+            Set-Content `
+                -Path $HtmlReportFile `
+                -Encoding UTF8 `
+                -ErrorAction Stop
+
         Show-Section "Report Generated"
 
         Write-Success "Diagnostic reports generated successfully."
@@ -1231,6 +1556,10 @@ function New-WRTEDiagnosticReport {
             "JSON Report" `
             $JsonReportFile
 
+        Write-Property `
+            "HTML Report" `
+            $HtmlReportFile
+
         $Duration =
             (Get-Date) - $StartTime
 
@@ -1239,9 +1568,10 @@ function New-WRTEDiagnosticReport {
             ("{0:N2} sec" -f $Duration.TotalSeconds)
 
         Write-Log `
-            ("Diagnostic reports generated. Text: {0}. JSON: {1}. Issues: {2}. Duration: {3:N2} seconds." `
+            ("Diagnostic reports generated. Text: {0}. JSON: {1}. HTML: {2}. Issues: {3}. Duration: {4:N2} seconds." `
             -f $ReportFile,
                 $JsonReportFile,
+                $HtmlReportFile,
                 $Issues.Count,
                 $Duration.TotalSeconds) `
             -Level INFO
