@@ -974,10 +974,262 @@ function New-WRTEDiagnosticReport {
                 -Encoding UTF8 `
                 -ErrorAction Stop
 
+        #------------------------------------------------------
+        # Export Structured JSON Report
+        #------------------------------------------------------
+
+        $JsonFileName =
+            "{0}.json" -f
+            [System.IO.Path]::GetFileNameWithoutExtension(
+                $ReportFileName
+            )
+
+        $JsonReportFile =
+            Join-Path `
+                -Path $ReportDirectory `
+                -ChildPath $JsonFileName
+
+        $StorageData = @(
+            foreach ($Drive in $Drives) {
+
+                $SizeGB =
+                    if ($Drive.Size) {
+                        [math]::Round(
+                            $Drive.Size / 1GB,
+                            2
+                        )
+                    }
+                    else {
+                        0
+                    }
+
+                $FreeGB =
+                    if ($Drive.FreeSpace) {
+                        [math]::Round(
+                            $Drive.FreeSpace / 1GB,
+                            2
+                        )
+                    }
+                    else {
+                        0
+                    }
+
+                $FreePercent =
+                    if ($Drive.Size -gt 0) {
+                        [math]::Round(
+                            ($Drive.FreeSpace / $Drive.Size) * 100,
+                            1
+                        )
+                    }
+                    else {
+                        0
+                    }
+
+                [pscustomobject]@{
+                    Drive       = $Drive.DeviceID
+                    SizeGB      = $SizeGB
+                    FreeGB      = $FreeGB
+                    FreePercent = $FreePercent
+                }
+            }
+        )
+
+        $NetworkData = @(
+            foreach ($Adapter in $NetworkAdapters) {
+
+                $IPv4Addresses = @(
+                    $Adapter.IPAddress |
+                        Where-Object {
+                            $_ -match "^\d{1,3}(\.\d{1,3}){3}$"
+                        }
+                )
+
+                [pscustomobject]@{
+                    Adapter        = $Adapter.Description
+                    DHCPEnabled    = [bool]$Adapter.DHCPEnabled
+                    IPv4Addresses  = $IPv4Addresses
+                    DefaultGateway = @($Adapter.DefaultIPGateway)
+                    DNSServers     = @($Adapter.DNSServerSearchOrder)
+                }
+            }
+        )
+
+        $FirewallData = @(
+            foreach ($Profile in $FirewallProfiles) {
+
+                [pscustomobject]@{
+                    Profile = $Profile.Name
+                    Enabled = [bool]$Profile.Enabled
+                }
+            }
+        )
+
+        $ProblemDeviceData = @(
+            foreach ($Device in $ActiveProblemDevices) {
+
+                [pscustomobject]@{
+                    Name             = $Device.Name
+                    DeviceID         = $Device.DeviceID
+                    ErrorCode        = $Device.ConfigManagerErrorCode
+                }
+            }
+        )
+
+        $DiagnosticData =
+            [ordered]@{
+
+                Report = [ordered]@{
+                    SchemaVersion = "1.0"
+                    Type        = "Diagnostic"
+                    GeneratedAt = (Get-Date).ToString(
+                        "yyyy-MM-ddTHH:mm:ss"
+                    )
+                    Computer    = $env:COMPUTERNAME
+                }
+
+                OperatingSystem = [ordered]@{
+                    Name        = $OperatingSystem.Caption
+                    Version     = $OperatingSystem.Version
+                    BuildNumber = $OperatingSystem.BuildNumber
+                }
+
+                Uptime = [ordered]@{
+                    LastBoot = $LastBoot.ToString(
+                        "yyyy-MM-ddTHH:mm:ss"
+                    )
+                    Days     = $Uptime.Days
+                    Hours    = $Uptime.Hours
+                    Minutes  = $Uptime.Minutes
+                }
+
+                Memory = [ordered]@{
+                    InstalledGB = $TotalMemoryGB
+                    UsedGB      = $UsedMemoryGB
+                    FreeGB      = $FreeMemoryGB
+                    UsagePercent = $MemoryUsagePercent
+                }
+
+                Storage =
+                    $StorageData
+
+                Network =
+                    $NetworkData
+
+                Security = [ordered]@{
+                    Firewall =
+                        $FirewallData
+
+                    Defender = [ordered]@{
+                        ServiceEnabled =
+                            $DefenderStatus.AMServiceEnabled
+
+                        AntivirusEnabled =
+                            $DefenderStatus.AntivirusEnabled
+
+                        RealTimeProtectionEnabled =
+                            $DefenderStatus.RealTimeProtectionEnabled
+                    }
+                }
+
+                Microsoft365 = [ordered]@{
+                    OfficeInstalled =
+                        [bool](
+                            Test-Path `
+                                -Path $ClickToRunPath
+                        )
+
+                    OfficeVersion =
+                        $OfficeVersion
+
+                    TeamsInstalled =
+                        ($TeamsPackages.Count -gt 0)
+                }
+
+                EventLogHealth = [ordered]@{
+                    WindowHours       = 24
+                    SystemErrors      = $SystemErrorEvents.Count
+                    ApplicationErrors = $ApplicationErrorEvents.Count
+                    TotalErrors       = $EventErrorCount
+                }
+
+                CrashHealth = [ordered]@{
+                    WindowDays        = 30
+                    BugCheckEvents    = $BugCheckEvents.Count
+                    RecentMinidumps   = $RecentMinidumps.Count
+                    MemoryDumpPresent = $MemoryDumpPresent
+                }
+
+                StartupHealth = [ordered]@{
+                    StartupApplications =
+                        $StartupApplications.Count
+
+                    WindowsTasks =
+                        $WindowsSystemStartupTasks.Count
+
+                    OtherStartupTasks =
+                        $OtherStartupTasks.Count
+
+                    StartupLoadItems =
+                        $StartupLoadItems
+                }
+
+                DeviceHealth = [ordered]@{
+                    DevicesDetected =
+                        $PnPDevices.Count
+
+                    ActiveProblems =
+                        $ActiveProblemDevices.Count
+
+                    DisabledDevices =
+                        $DisabledDevices.Count
+
+                    ProblemDevices =
+                        $ProblemDeviceData
+                }
+
+                TPM = [ordered]@{
+                    Present       = $TPMPresent
+                    Ready         = $TPMReady
+                    Enabled       = $TPMEnabled
+                    Specification = $TPMSpecification
+                }
+
+                Assessment = [ordered]@{
+                    Status =
+                        if ($Issues.Count -eq 0) {
+                            "Healthy"
+                        }
+                        else {
+                            "AttentionRecommended"
+                        }
+
+                    IssueCount =
+                        $Issues.Count
+
+                    Issues =
+                        @($Issues)
+                }
+            }
+
+        $DiagnosticData |
+            ConvertTo-Json `
+                -Depth 6 |
+            Set-Content `
+                -Path $JsonReportFile `
+                -Encoding UTF8 `
+                -ErrorAction Stop
+
         Show-Section "Report Generated"
 
-        Write-Success "Diagnostic report generated successfully."
-        Write-Property "Report File" $ReportFile
+        Write-Success "Diagnostic reports generated successfully."
+
+        Write-Property `
+            "Text Report" `
+            $ReportFile
+
+        Write-Property `
+            "JSON Report" `
+            $JsonReportFile
 
         $Duration =
             (Get-Date) - $StartTime
@@ -987,8 +1239,11 @@ function New-WRTEDiagnosticReport {
             ("{0:N2} sec" -f $Duration.TotalSeconds)
 
         Write-Log `
-            ("Diagnostic report generated: {0}. Issues: {1}. Duration: {2:N2} seconds." `
-            -f $ReportFile, $Issues.Count, $Duration.TotalSeconds) `
+            ("Diagnostic reports generated. Text: {0}. JSON: {1}. Issues: {2}. Duration: {3:N2} seconds." `
+            -f $ReportFile,
+                $JsonReportFile,
+                $Issues.Count,
+                $Duration.TotalSeconds) `
             -Level INFO
 
     }

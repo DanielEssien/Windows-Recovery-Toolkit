@@ -85,6 +85,22 @@ function Export-LatestWRTEReport {
             $LatestReport =
                 $Reports[0]
 
+            $CompanionJsonFile =
+                [System.IO.Path]::ChangeExtension(
+                    $LatestReport.FullName,
+                    ".json"
+                )
+
+            $JsonReport =
+                if (Test-Path -Path $CompanionJsonFile) {
+                    Get-Item `
+                        -Path $CompanionJsonFile `
+                        -ErrorAction Stop
+                }
+                else {
+                    $null
+                }
+
             #--------------------------------------------------
             # Export Destination
             #--------------------------------------------------
@@ -100,37 +116,70 @@ function Export-LatestWRTEReport {
 
             }
 
-            $DestinationFile =
+            $BaseName =
+                [System.IO.Path]::GetFileNameWithoutExtension(
+                    $LatestReport.Name
+                )
+
+            $DestinationTextFile =
                 Join-Path `
                     -Path $DesktopPath `
                     -ChildPath $LatestReport.Name
+
+            $DestinationJsonFile =
+                if ($JsonReport) {
+
+                    Join-Path `
+                        -Path $DesktopPath `
+                        -ChildPath $JsonReport.Name
+
+                }
+                else {
+                    $null
+                }
 
             #--------------------------------------------------
             # Prevent Overwrite
             #--------------------------------------------------
 
-            if (Test-Path -Path $DestinationFile) {
+            $TextDestinationExists =
+                Test-Path `
+                    -Path $DestinationTextFile
+
+            $JsonDestinationExists =
+                if ($DestinationJsonFile) {
+                    Test-Path `
+                        -Path $DestinationJsonFile
+                }
+                else {
+                    $false
+                }
+
+            if (
+                $TextDestinationExists -or
+                $JsonDestinationExists
+            ) {
 
                 $Timestamp =
                     Get-Date `
                         -Format "yyyyMMdd-HHmmss"
 
-                $BaseName =
-                    [System.IO.Path]::GetFileNameWithoutExtension(
-                        $LatestReport.Name
-                    )
-
-                $Extension =
-                    $LatestReport.Extension
-
-                $ExportName =
-                    "$BaseName-Exported-$Timestamp$Extension"
-
-                $DestinationFile =
+                $DestinationTextFile =
                     Join-Path `
                         -Path $DesktopPath `
-                        -ChildPath $ExportName
+                        -ChildPath (
+                            "$BaseName-Exported-$Timestamp.txt"
+                        )
 
+                if ($JsonReport) {
+
+                    $DestinationJsonFile =
+                        Join-Path `
+                            -Path $DesktopPath `
+                            -ChildPath (
+                                "$BaseName-Exported-$Timestamp.json"
+                            )
+                }
             }
 
             #--------------------------------------------------
@@ -139,8 +188,16 @@ function Export-LatestWRTEReport {
 
             Copy-Item `
                 -Path $LatestReport.FullName `
-                -Destination $DestinationFile `
+                -Destination $DestinationTextFile `
                 -ErrorAction Stop
+
+            if ($JsonReport) {
+
+                Copy-Item `
+                    -Path $JsonReport.FullName `
+                    -Destination $DestinationJsonFile `
+                    -ErrorAction Stop
+            }
 
             Show-Section "Report Exported"
 
@@ -148,12 +205,23 @@ function Export-LatestWRTEReport {
                 "Latest WRTE report exported successfully."
 
             Write-Property `
-                "Source Report" `
+                "Text Source" `
                 $LatestReport.FullName
 
             Write-Property `
-                "Destination" `
-                $DestinationFile
+                "Text Destination" `
+                $DestinationTextFile
+
+            if ($JsonReport) {
+
+                Write-Property `
+                    "JSON Source" `
+                    $JsonReport.FullName
+
+                Write-Property `
+                    "JSON Destination" `
+                    $DestinationJsonFile
+            }
 
             $ReportSizeKB =
                 [math]::Round(
@@ -179,10 +247,10 @@ function Export-LatestWRTEReport {
                 ("{0:N2} sec" -f $Duration.TotalSeconds)
 
             Write-Log `
-                ("Latest WRTE report exported from {0} to {1}. Duration: {2:N2} seconds." `
-                -f $LatestReport.FullName,
-                   $DestinationFile,
-                   $Duration.TotalSeconds) `
+                ("Latest WRTE report exported. Text: {0}. JSON: {1}. Duration: {2:N2} seconds." `
+                -f $DestinationTextFile,
+                    $DestinationJsonFile,
+                    $Duration.TotalSeconds) `
                 -Level INFO
 
         }
