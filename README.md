@@ -2,7 +2,7 @@
 
 > Enterprise-grade Windows diagnostics, maintenance, recovery, reporting, and support toolkit built with PowerShell.
 
-![Version](https://img.shields.io/badge/version-0.5.0-blue)
+![Version](https://img.shields.io/badge/version-0.6.0-blue)
 ![PowerShell](https://img.shields.io/badge/PowerShell-7%2B-5391FE)
 ![Platform](https://img.shields.io/badge/platform-Windows-success)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -44,22 +44,29 @@ WRTE aims to:
 
 ## 🚀 Current Version
 
-### v0.5.0 — Quality, Testing & Packaging
+### v0.6.0 — Repair Safety & Enhanced Reporting
 
-Version 0.5.0 focuses on improving WRTE reliability, maintainability, reporting, testing, and distribution.
+Version 0.6.0 strengthens WRTE's repair safety model and expands its diagnostic reporting capabilities.
 
 Key improvements include:
 
-- Automated Pester testing
-- Configuration validation
-- Hardened application startup
-- Hardened module loader
-- Improved error handling
+- Controlled live Windows Repair execution
+- Global Dry Run safety control
+- Per-feature Windows Repair live-mode safety gates
+- Administrator privilege validation for live repairs
+- User confirmation before destructive or system-changing actions
+- System File Repair using SFC
+- Windows Image Repair using DISM
+- Network Stack Reset
+- Windows Update Repair with service-state restoration
+- Professional HTML diagnostic reports
 - Structured JSON diagnostic reports
-- Paired TXT and JSON report export
-- PowerShell 7 launcher validation
-- Windows batch launcher
-- Automated release package generation
+- Human-readable TXT diagnostic reports
+- Companion TXT, JSON, and HTML report export
+- Shared timestamp handling for exported report sets
+- Improved report presentation and offline viewing
+- Expanded automated Pester coverage
+- 200 automated tests passing
 
 ---
 
@@ -119,11 +126,21 @@ Includes:
 
 - System File Repair
 - Windows Image Repair
-- Network Reset
+- Network Stack Reset
 - Windows Update Repair
 - Advanced Recovery Tools
 
-> Windows Repair currently supports Dry Run mode to help prevent unintended system changes during development and testing.
+Windows Repair supports controlled live execution with:
+
+- Global Dry Run protection
+- Per-feature live execution controls
+- Administrator privilege checks
+- User confirmation prompts
+- Repair result verification
+- Activity logging
+- Windows Update service-state restoration
+
+> Windows Repair uses a layered safety model. A global Dry Run setting can prevent all live repair execution, while individual repair features must also be explicitly enabled before live actions are permitted. Administrator privileges and user confirmation are required before supported live repairs are executed.
 
 ### Security
 
@@ -165,10 +182,18 @@ Includes:
 
 - System Report
 - Diagnostic Health Report
+- Human-readable TXT Diagnostic Report
 - Structured JSON Diagnostic Report
-- Report Export
+- Professional HTML Diagnostic Report
+- Companion Report Export
 
-Diagnostic reports can be generated in both human-readable TXT format and structured JSON format.
+Diagnostic reports can be generated as a matching report set in:
+
+- TXT format for human-readable troubleshooting
+- JSON format for structured data processing
+- HTML format for professional offline viewing and presentation
+
+The Export Latest Report feature detects matching companion files and exports TXT, JSON, and HTML reports together.
 
 ### Utilities
 
@@ -202,8 +227,41 @@ WRTE can generate detailed diagnostic reports covering:
 - TPM status
 - Overall system assessment
 
-Reports are generated as:
+Diagnostic reports are generated as matching companion files:
 
 ```text
 WRTE-DiagnosticReport-ComputerName-Timestamp.txt
 WRTE-DiagnosticReport-ComputerName-Timestamp.json
+WRTE-DiagnosticReport-ComputerName-Timestamp.html
+```
+The TXT report provides a human-readable troubleshooting summary.
+
+The JSON report provides structured diagnostic data suitable for automation, parsing, integration, and future tooling.
+
+The HTML report provides a professional, self-contained offline diagnostic view with formatted sections and tables.
+
+When exporting the latest diagnostic report, WRTE automatically detects available companion files and exports the TXT, JSON, and HTML report set together.
+
+If an exported filename already exists, WRTE applies a shared timestamp suffix to the entire report set to prevent accidental overwriting.
+
+---
+
+## 🧪 Automated Testing
+
+WRTE uses Pester for automated testing.
+
+The current test suite covers:
+
+- Core bootstrap behavior
+- Configuration loading and validation
+- Logger initialization and output
+- Module loading
+- Function availability
+- Module structure and PowerShell parser integrity
+- Windows Repair safety gates
+- System File Repair
+- Windows Image Repair
+- Network Stack Reset
+- Windows Update Repair
+- Windows Update service-state restoration
+- Report companion export behavior

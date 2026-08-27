@@ -161,7 +161,7 @@ Describe "WRTE Windows Update Repair" {
         }
     }
 
-        Context "Global DryRun disabled and Windows Update Repair enabled" {
+    Context "Global DryRun disabled and Windows Update Repair enabled" {
 
         BeforeEach {
 
