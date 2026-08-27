@@ -31,3 +31,4 @@ ConsoleHost_history.txt
 
 # OS Files
 .DS_Store
+/Build/
