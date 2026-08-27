@@ -12,6 +12,9 @@
 #
 ###############################################################
 
+Write-Host "Loading ConfigurationValidation.ps1..." -ForegroundColor Yellow
+. "$PSScriptRoot\ConfigurationValidation.ps1"
+
 Write-Host "Loading Configuration.ps1..." -ForegroundColor Yellow
 . "$PSScriptRoot\Configuration.ps1"
 

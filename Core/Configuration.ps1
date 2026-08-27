@@ -23,7 +23,18 @@ function Initialize-Configuration {
         throw "Configuration file not found: $configPath"
     }
 
-    $script:Configuration = Get-Content $configPath -Raw | ConvertFrom-Json
+    $script:Configuration =
+        Get-Content `
+            -Path $configPath `
+            -Raw `
+            -ErrorAction Stop |
+        ConvertFrom-Json `
+            -ErrorAction Stop
+
+    if (-not (Test-WRTEConfiguration -Configuration $script:Configuration)) {
+        $script:Configuration = $null
+        throw "WRTE configuration validation failed."
+    }
 }
 
 function Get-Configuration {

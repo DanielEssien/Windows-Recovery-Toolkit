@@ -19,6 +19,11 @@ BeforeAll {
             -Parent `
             (Split-Path -Parent $PSScriptRoot)
 
+    $ConfigurationValidationFile =
+        Join-Path `
+            $ProjectRoot `
+            "Core\ConfigurationValidation.ps1"
+
     $ConfigurationFile =
         Join-Path `
             $ProjectRoot `
@@ -29,6 +34,7 @@ BeforeAll {
             $ProjectRoot `
             "Config\Settings.json"
 
+    . $ConfigurationValidationFile
     . $ConfigurationFile
 }
 
@@ -153,6 +159,76 @@ Describe "WRTE Configuration" {
             $Configuration.Application.Name |
                 Should -Be `
                     "Windows Recovery Toolkit Enterprise"
+        }
+    }
+
+    Context "Configuration validation" {
+
+        It "Test-WRTEConfiguration is available" {
+
+            Get-Command `
+                Test-WRTEConfiguration `
+                -CommandType Function `
+                -ErrorAction SilentlyContinue |
+                Should -Not -BeNullOrEmpty
+        }
+
+        It "accepts the current WRTE configuration" {
+
+            Initialize-Configuration
+
+            $Configuration =
+                Get-Configuration
+
+            Test-WRTEConfiguration `
+                -Configuration $Configuration |
+                Should -BeTrue
+        }
+
+        It "rejects a null configuration" {
+
+            {
+                Test-WRTEConfiguration `
+                    -Configuration $null
+            } |
+                Should -Throw
+        }
+        
+        It "rejects configuration without Application settings" {
+
+            $InvalidConfiguration =
+                [pscustomobject]@{
+                    Paths = [pscustomobject]@{
+                        Logs = "Logs"
+                    }
+                }
+
+            Test-WRTEConfiguration `
+                -Configuration $InvalidConfiguration |
+                Should -BeFalse
+        }
+
+        It "rejects configuration without a Logs path" {
+
+            $InvalidConfiguration =
+                [pscustomobject]@{
+                    Application = [pscustomobject]@{
+                        Name      = "Windows Recovery Toolkit Enterprise"
+                        ShortName = "WRTE"
+                        Version   = "0.5.0"
+                        Author    = "Daniel Ita Essien"
+                        Company   = "Daniel Essien"
+                        Motto     = "Diagnose. Repair. Restore."
+                    }
+
+                    Paths = [pscustomobject]@{
+                        Logs = ""
+                    }
+                }
+
+            Test-WRTEConfiguration `
+                -Configuration $InvalidConfiguration |
+                Should -BeFalse
         }
     }
 }
