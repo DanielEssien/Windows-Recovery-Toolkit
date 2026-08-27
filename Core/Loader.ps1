@@ -12,226 +12,252 @@
 #
 ###############################################################
 
-Write-Host "Loading ConfigurationValidation.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\ConfigurationValidation.ps1"
+$PreviousErrorActionPreference =
+    $ErrorActionPreference
 
-Write-Host "Loading Configuration.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\Configuration.ps1"
+$ErrorActionPreference =
+    "Stop"
 
-Write-Host "Loading Logger.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\Logger.ps1"
+try {
 
-Write-Host "Loading Console.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\Console.ps1"
+    Write-Host "Loading ConfigurationValidation.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\ConfigurationValidation.ps1"
 
-Write-Host "Loading Utilities.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\Utilities.ps1"
+    Write-Host "Loading Configuration.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\Configuration.ps1"
 
-Write-Host "Loading System.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\System.ps1"
+    Write-Host "Loading Logger.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\Logger.ps1"
 
-Write-Host "Loading Application.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\Application.ps1"
+    Write-Host "Loading Console.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\Console.ps1"
 
-Write-Host "Loading Bootstrap.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\Bootstrap.ps1"
+    Write-Host "Loading Utilities.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\Utilities.ps1"
 
-Write-Host "Loading Dashboard.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Dashboard\Dashboard.ps1"
+    Write-Host "Loading System.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\System.ps1"
 
-Write-Host "Loading Diagnostics.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\Diagnostics.ps1"
+    Write-Host "Loading Application.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\Application.ps1"
 
-Write-Host "Loading QuickHealth.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\QuickHealth.ps1"
+    Write-Host "Loading Bootstrap.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\Bootstrap.ps1"
 
-Write-Host "Loading SFC.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\SFC.ps1"
+    Write-Host "Loading Dashboard.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Dashboard\Dashboard.ps1"
 
-Write-Host "Loading DISM.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\DISM.ps1"
+    Write-Host "Loading Diagnostics.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\Diagnostics.ps1"
 
-Write-Host "Loading DiskCheck.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\DiskCheck.ps1"
+    Write-Host "Loading QuickHealth.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\QuickHealth.ps1"
 
-Write-Host "Loading MemoryTest.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\MemoryTest.ps1"
+    Write-Host "Loading SFC.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\SFC.ps1"
 
-Write-Host "Loading Recovery.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\Recovery.ps1"
+    Write-Host "Loading DISM.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\DISM.ps1"
 
-Write-Host "Loading Hardware.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Hardware\Hardware.ps1"
+    Write-Host "Loading DiskCheck.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\DiskCheck.ps1"
 
-Write-Host "Loading Hardware Overview..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Hardware\Overview.ps1"
+    Write-Host "Loading MemoryTest.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\MemoryTest.ps1"
 
-Write-Host "Loading Storage.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Hardware\Storage.ps1"
+    Write-Host "Loading Recovery.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\Recovery.ps1"
 
-Write-Host "Loading Battery.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Hardware\Battery.ps1"
+    Write-Host "Loading Hardware.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Hardware\Hardware.ps1"
 
-Write-Host "Loading BIOS.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Hardware\BIOS.ps1"
+    Write-Host "Loading Hardware Overview..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Hardware\Overview.ps1"
 
-Write-Host "Loading DriverHealth.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Hardware\DriverHealth.ps1"
+    Write-Host "Loading Storage.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Hardware\Storage.ps1"
 
-Write-Host "Loading Network.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Networking\Network.ps1"
+    Write-Host "Loading Battery.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Hardware\Battery.ps1"
 
-Write-Host "Loading Network Overview..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Networking\Overview.ps1"
+    Write-Host "Loading BIOS.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Hardware\BIOS.ps1"
 
-Write-Host "Loading Adapters.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Networking\Adapters.ps1"
+    Write-Host "Loading DriverHealth.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Hardware\DriverHealth.ps1"
 
-Write-Host "Loading Connectivity.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Networking\Connectivity.ps1"
+    Write-Host "Loading Network.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Networking\Network.ps1"
 
-Write-Host "Loading DNS.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Networking\DNS.ps1"
+    Write-Host "Loading Network Overview..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Networking\Overview.ps1"
 
-Write-Host "Loading Maintenance.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Maintenance\Maintenance.ps1"
+    Write-Host "Loading Adapters.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Networking\Adapters.ps1"
 
-Write-Host "Loading TempCleanup.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Maintenance\TempCleanup.ps1"
+    Write-Host "Loading Connectivity.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Networking\Connectivity.ps1"
 
-Write-Host "Loading WindowsUpdate.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Maintenance\WindowsUpdate.ps1"
+    Write-Host "Loading DNS.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Networking\DNS.ps1"
 
-Write-Host "Loading DiskCleanup.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Maintenance\DiskCleanup.ps1"
+    Write-Host "Loading Maintenance.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Maintenance\Maintenance.ps1"
 
-Write-Host "Loading Uptime.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Maintenance\Uptime.ps1"
+    Write-Host "Loading TempCleanup.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Maintenance\TempCleanup.ps1"
 
-Write-Host "Loading WindowsRepair.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\WindowsRepair\WindowsRepair.ps1"
+    Write-Host "Loading WindowsUpdate.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Maintenance\WindowsUpdate.ps1"
 
-Write-Host "Loading SystemFiles.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\WindowsRepair\SystemFiles.ps1"
+    Write-Host "Loading DiskCleanup.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Maintenance\DiskCleanup.ps1"
 
-Write-Host "Loading WindowsImage.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\WindowsRepair\WindowsImage.ps1"
+    Write-Host "Loading Uptime.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Maintenance\Uptime.ps1"
 
-Write-Host "Loading NetworkReset.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\WindowsRepair\NetworkReset.ps1"
+    Write-Host "Loading WindowsRepair.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\WindowsRepair\WindowsRepair.ps1"
 
-Write-Host "Loading WindowsUpdateRepair.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\WindowsRepair\WindowsUpdateRepair.ps1"
+    Write-Host "Loading SystemFiles.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\WindowsRepair\SystemFiles.ps1"
 
-Write-Host "Loading AdvancedRecovery.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\WindowsRepair\AdvancedRecovery.ps1"
+    Write-Host "Loading WindowsImage.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\WindowsRepair\WindowsImage.ps1"
 
-Write-Host "Loading Security.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\Security.ps1"
+    Write-Host "Loading NetworkReset.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\WindowsRepair\NetworkReset.ps1"
 
-Write-Host "Loading Security Overview..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\Overview.ps1"
+    Write-Host "Loading WindowsUpdateRepair.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\WindowsRepair\WindowsUpdateRepair.ps1"
 
-Write-Host "Loading Defender.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\Defender.ps1"
+    Write-Host "Loading AdvancedRecovery.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\WindowsRepair\AdvancedRecovery.ps1"
 
-Write-Host "Loading Firewall.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\Firewall.ps1"
+    Write-Host "Loading Security.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\Security.ps1"
 
-Write-Host "Loading BitLocker.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\BitLocker.ps1"
+    Write-Host "Loading Security Overview..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\Overview.ps1"
 
-Write-Host "Loading SecureBoot.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\SecureBoot.ps1"
+    Write-Host "Loading Defender.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\Defender.ps1"
 
-Write-Host "Loading EncryptionProviders.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\EncryptionProviders.ps1"
+    Write-Host "Loading Firewall.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\Firewall.ps1"
 
-Write-Host "Loading DiskEncryption.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\DiskEncryption.ps1"
+    Write-Host "Loading BitLocker.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\BitLocker.ps1"
 
-Write-Host "Loading TPM.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Security\TPM.ps1"
+    Write-Host "Loading SecureBoot.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\SecureBoot.ps1"
 
-Write-Host "Loading OneDrive Overview.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\OneDrive\Overview.ps1"
+    Write-Host "Loading EncryptionProviders.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\EncryptionProviders.ps1"
 
-Write-Host "Loading OneDrive SyncStatus.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\OneDrive\SyncStatus.ps1"
+    Write-Host "Loading DiskEncryption.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\DiskEncryption.ps1"
 
-Write-Host "Loading OneDrive KnownFolderBackup.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\OneDrive\KnownFolderBackup.ps1"
+    Write-Host "Loading TPM.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Security\TPM.ps1"
 
-Write-Host "Loading OneDrive Accounts.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\OneDrive\Accounts.ps1"
+    Write-Host "Loading OneDrive Overview.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\OneDrive\Overview.ps1"
 
-Write-Host "Loading OneDrive Repair.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\OneDrive\Repair.ps1"
+    Write-Host "Loading OneDrive SyncStatus.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\OneDrive\SyncStatus.ps1"
 
-Write-Host "Loading OneDrive Settings.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\OneDrive\Settings.ps1"
+    Write-Host "Loading OneDrive KnownFolderBackup.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\OneDrive\KnownFolderBackup.ps1"
 
-Write-Host "Loading OneDrive.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\OneDrive\OneDrive.ps1"
+    Write-Host "Loading OneDrive Accounts.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\OneDrive\Accounts.ps1"
 
-Write-Host "Loading Microsoft365 Overview.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Microsoft365\Overview.ps1"
+    Write-Host "Loading OneDrive Repair.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\OneDrive\Repair.ps1"
 
-Write-Host "Loading Microsoft365 OfficeInstall.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Microsoft365\OfficeInstall.ps1"
+    Write-Host "Loading OneDrive Settings.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\OneDrive\Settings.ps1"
 
-Write-Host "Loading Microsoft365 Activation.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Microsoft365\Activation.ps1"
+    Write-Host "Loading OneDrive.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\OneDrive\OneDrive.ps1"
 
-Write-Host "Loading Microsoft365 Outlook.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Microsoft365\Outlook.ps1"
+    Write-Host "Loading Microsoft365 Overview.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Microsoft365\Overview.ps1"
 
-Write-Host "Loading Microsoft365 Teams.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Microsoft365\Teams.ps1"
+    Write-Host "Loading Microsoft365 OfficeInstall.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Microsoft365\OfficeInstall.ps1"
 
-Write-Host "Loading Microsoft365 UpdateChannel.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Microsoft365\UpdateChannel.ps1"
+    Write-Host "Loading Microsoft365 Activation.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Microsoft365\Activation.ps1"
 
-Write-Host "Loading Microsoft365.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Microsoft365\Microsoft365.ps1"
+    Write-Host "Loading Microsoft365 Outlook.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Microsoft365\Outlook.ps1"
 
-Write-Host "Loading Reports ReportHelpers.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Reports\ReportHelpers.ps1"
+    Write-Host "Loading Microsoft365 Teams.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Microsoft365\Teams.ps1"
 
-Write-Host "Loading Reports SystemReport.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Reports\SystemReport.ps1"
+    Write-Host "Loading Microsoft365 UpdateChannel.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Microsoft365\UpdateChannel.ps1"
 
-Write-Host "Loading Reports DiagnosticReport.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Reports\DiagnosticReport.ps1"
+    Write-Host "Loading Microsoft365.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Microsoft365\Microsoft365.ps1"
 
-Write-Host "Loading Reports ExportReport.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Reports\ExportReport.ps1"
+    Write-Host "Loading Reports ReportHelpers.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Reports\ReportHelpers.ps1"
 
-Write-Host "Loading Reports Reports.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Reports\Reports.ps1"
+    Write-Host "Loading Reports SystemReport.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Reports\SystemReport.ps1"
 
-Write-Host "Loading Utilities Environment.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Utilities\Environment.ps1"
+    Write-Host "Loading Reports DiagnosticReport.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Reports\DiagnosticReport.ps1"
 
-Write-Host "Loading Utilities ProcessLookup.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Utilities\ProcessLookup.ps1"
+    Write-Host "Loading Reports ExportReport.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Reports\ExportReport.ps1"
 
-Write-Host "Loading Utilities Utilities.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Utilities\Utilities.ps1"
+    Write-Host "Loading Reports Reports.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Reports\Reports.ps1"
 
-Write-Host "Loading Utilities AdminTools.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Utilities\AdminTools.ps1"
+    Write-Host "Loading Utilities Environment.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Utilities\Environment.ps1"
 
-Write-Host "Loading Utilities ServiceLookup.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Utilities\ServiceLookup.ps1"
+    Write-Host "Loading Utilities ProcessLookup.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Utilities\ProcessLookup.ps1"
 
-Write-Host "Loading EventLogs.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\EventLogs.ps1"
+    Write-Host "Loading Utilities Utilities.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Utilities\Utilities.ps1"
 
-Write-Host "Loading CrashDump.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\CrashDump.ps1"
+    Write-Host "Loading Utilities AdminTools.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Utilities\AdminTools.ps1"
 
-Write-Host "Loading Startup.ps1..." -ForegroundColor Yellow
-. "$PSScriptRoot\..\Modules\Diagnostics\Startup.ps1"
+    Write-Host "Loading Utilities ServiceLookup.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Utilities\ServiceLookup.ps1"
 
-Write-Host "WRTE modules loaded successfully." -ForegroundColor Green
+    Write-Host "Loading EventLogs.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\EventLogs.ps1"
+
+    Write-Host "Loading CrashDump.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\CrashDump.ps1"
+
+    Write-Host "Loading Startup.ps1..." -ForegroundColor Yellow
+    . "$PSScriptRoot\..\Modules\Diagnostics\Startup.ps1"
+
+    Write-Host "WRTE modules loaded successfully." -ForegroundColor Green
+}
+catch {
+
+    $LoaderError =
+        $_.Exception.Message
+
+    Write-Host ""
+    Write-Host "WRTE module loading failed." -ForegroundColor Red
+    Write-Host "Reason: $LoaderError" -ForegroundColor Red
+    Write-Host ""
+
+    throw "WRTE loader failed. $LoaderError"
+}
+finally {
+
+    $ErrorActionPreference =
+        $PreviousErrorActionPreference
+}

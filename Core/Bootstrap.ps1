@@ -17,12 +17,41 @@ function Start-Bootstrap {
     [CmdletBinding()]
     param()
 
-    Initialize-Configuration
+    try {
 
-    Initialize-Logger
+        Initialize-Configuration
 
-    Write-Log "Bootstrap completed."
+        Initialize-Logger
 
-    Start-Application
+        Write-Log `
+            -Message "Bootstrap completed." `
+            -Level INFO
 
+        Start-Application
+    }
+    catch {
+
+        $ErrorMessage =
+            $_.Exception.Message
+
+        try {
+
+            if ($script:LogFile) {
+
+                Write-Log `
+                    -Message "Bootstrap failed. $ErrorMessage" `
+                    -Level ERROR
+            }
+        }
+        catch {
+            # Logging may not be available if initialization failed.
+        }
+
+        Write-Host ""
+        Write-Host "WRTE failed to start." -ForegroundColor Red
+        Write-Host "Reason: $ErrorMessage" -ForegroundColor Red
+        Write-Host ""
+
+        return
+    }
 }

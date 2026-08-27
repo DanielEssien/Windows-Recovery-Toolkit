@@ -116,4 +116,52 @@ Describe "WRTE Loader" {
                 Should -Not -BeNullOrEmpty
         }
     }
+
+    Context "Loader failure handling" {
+
+        It "throws a clear error when a required script is missing" {
+
+            $TemporaryRoot =
+                Join-Path `
+                    $TestDrive `
+                    "WRTE"
+
+            $CoreRoot =
+                Join-Path `
+                    $TemporaryRoot `
+                    "Core"
+
+            New-Item `
+                -Path $CoreRoot `
+                -ItemType Directory `
+                -Force |
+                Out-Null
+
+            $LoaderContent =
+                Get-Content `
+                    -Path $LoaderFile `
+                    -Raw
+
+            $LoaderContent =
+                $LoaderContent.Replace(
+                    '$PSScriptRoot\ConfigurationValidation.ps1',
+                    '$PSScriptRoot\MissingConfigurationValidation.ps1'
+                )
+
+            $TemporaryLoader =
+                Join-Path `
+                    $CoreRoot `
+                    "Loader.ps1"
+
+            Set-Content `
+                -Path $TemporaryLoader `
+                -Value $LoaderContent
+
+            {
+                . $TemporaryLoader
+            } |
+                Should -Throw `
+                    "*WRTE loader failed*"
+        }
+    }
 }
