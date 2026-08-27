@@ -70,6 +70,141 @@ Key improvements include:
 
 ---
 
+## Getting Started
+
+WRTE is a portable PowerShell-based toolkit and does not require a traditional installation.
+
+### Requirements
+
+Before running WRTE, ensure that your system has:
+
+- Windows
+- PowerShell 7 or later
+- Permission to run PowerShell scripts
+- Administrator privileges for system-changing repair operations
+
+> **Note:** Many diagnostic and reporting features can be used without elevation.
+> Live Windows Repair operations require WRTE to be run with administrator privileges.
+
+### Download
+
+1. Go to the **Releases** section of this repository.
+2. Download the latest release package:
+
+   `Windows-Recovery-Toolkit-Enterprise-v0.6.0.zip`
+
+3. Extract the ZIP file to a folder of your choice.
+
+For example:
+
+```text
+C:\Tools\Windows-Recovery-Toolkit-Enterprise-v0.6.0
+```
+
+### Launch WRTE
+
+Open the extracted folder and use either of the following methods.
+
+#### Option 1 — Launcher
+
+Run:
+
+```text
+Launcher.bat
+```
+
+#### Option 2 — PowerShell
+
+Open PowerShell 7 in the WRTE folder and run:
+
+```powershell
+.\Launcher.ps1
+```
+
+If Windows prevents the downloaded script from running because it was obtained from the Internet, you can unblock the WRTE scripts from PowerShell:
+
+```powershell
+Get-ChildItem -Path . -Recurse -File | Unblock-File
+```
+
+Then launch WRTE again:
+
+```powershell
+.\Launcher.ps1
+```
+
+### Administrator Mode
+
+For diagnostic tasks that do not modify Windows, normal execution may be sufficient.
+
+For live repair operations such as:
+
+- System File Repair
+- Windows Image Repair
+- Network Stack Reset
+- Windows Update Repair
+
+start PowerShell or the WRTE launcher using **Run as administrator**.
+
+WRTE checks for administrator privileges before performing supported live repair operations.
+
+### Safe Default — Dry Run
+
+WRTE ships with Windows Repair in **Dry Run mode by default**:
+
+```json
+"DryRun": true
+```
+
+In Dry Run mode, repair workflows can be reviewed without performing system-changing repair actions.
+
+To enable supported live repair operations, edit:
+
+```text
+Config\Settings.json
+```
+
+and change:
+
+```json
+"DryRun": true
+```
+
+to:
+
+```json
+"DryRun": false
+```
+
+Live execution remains protected by:
+
+- Per-feature live repair controls
+- Administrator privilege validation
+- User confirmation
+- Repair result verification
+- Activity logging
+
+> **Recommended:** Keep Dry Run enabled when first evaluating WRTE in a new environment.
+
+### Verify Your PowerShell Version
+
+Run:
+
+```powershell
+$PSVersionTable.PSVersion
+```
+
+WRTE requires **PowerShell 7 or later**.
+
+### Updating WRTE
+
+When a newer version becomes available:
+
+1. Download the new release package from GitHub Releases.
+2. Extract it into a new folder.
+3. Review the release notes for configuration or behavior changes.
+4. Test the new version before replacing an existing deployment.
+
 ## 🧩 Modules
 
 WRTE currently includes the following modules:
